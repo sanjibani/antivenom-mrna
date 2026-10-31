@@ -1,0 +1,64 @@
+[project]
+name = "antivenom-mrna"
+version = "0.1.0"
+description = "Open, reproducible, full-construct mRNA designs for India's Big Four venomous snakes, plus the auditable design engine that produced them."
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { text = "MIT" }
+authors = [{ name = "sanjibani" }]
+keywords = ["mrna", "antivenom", "snakebite", "codon-optimization", "bioinformatics", "india"]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+
+dependencies = [
+    "biopython>=1.83",
+    "numpy>=1.26",
+    "pandas>=2.2",
+]
+
+# Optional extras are deliberately not declared here. `uv` resolves every
+# declared extra during `uv sync`, and ViennaRNA needs a source build on some
+# platforms, which turns a five-second install into a ten-minute one. Optional
+# tools are installed on demand, see README.md.
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mrna"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "D", "ANN", "S", "EM", "COM", "RUF"]
+ignore = [
+    "D203",  # incompatible with D211
+    "D213",  # incompatible with D212
+    "ANN401",  # allow explicit Any where it is genuinely any
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN201", "ANN001"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
