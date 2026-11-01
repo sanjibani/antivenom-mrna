@@ -84,9 +84,48 @@ post, and a validation signal, so that there are no silent stretches.
 | M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Second artifact, first repository views | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
 | M2 | Full-construct assembler, curated UTR library, secondary-structure checks | First tool someone else can use | Done, see [the M2 report](docs/m2_construct_assembler.md) |
 | M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
-| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Not started |
+| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
 | M5 | Full Big Four coverage and a polyvalent cocktail design | Preprint and launch thread | Not started |
 | M6+ | Regional variants, partner outreach, design iteration | Sustained cadence | Not started |
+
+## What M4 established
+
+The literature map, and the surprising part of it.
+
+M4 records every published antibody candidate with a claimed neutralising
+activity against a toxin, or the whole venom, of a Big Four species: 22
+candidates, with the species, toxin family, target, antibody, format, sequence
+source, patent status, what each was tested against, its evidence level and
+its mRNA suitability. The table is generated from
+[`src/mrna/candidates.py`](src/mrna/candidates.py) through
+[`src/mrna/tracker.py`](src/mrna/tracker.py), so it cannot drift away from
+the code that validates it.
+
+- **Sequence availability, not antibody discovery, is the bottleneck.** Only
+  8 of the 22 candidates have a variable-region sequence that can be located
+  in a public database. The rest are in a paper's supplementary table, in a
+  patent, or nowhere a machine can read. For a project whose contribution is
+  the mRNA layer, that is the number that matters, and it is much easier to
+  move than discovering an antibody.
+- **Common krait is almost entirely unprotected.** Krait venom is about
+  64.5 per cent phospholipase A2 by mass, and no published antibody
+  candidate in the survey targets krait phospholipase A2. The one krait
+  candidate is a three-finger toxin antibody, and it only doubled survival
+  time against whole krait venom.
+- **Russell's viper haemorrhage has no antibody candidate.** No published
+  antibody targets the snake venom metalloproteinases of Indian *Daboia
+  russelii*, which are the main cause of the bleeding in that bite. The one
+  recombinant candidate in the survey, a camelid VHH, targets secretory
+  phospholipase A2 instead.
+- **Seven of the uncovered cells belong to a Big Four species.** The report
+  marks them, and it also says which empty cells are *not* an opportunity:
+  the Kunitz-type serine protease inhibitors are the anticoagulant fraction
+  of viper venom, so an antibody against them would make the coagulopathy
+  worse.
+- **The mRNA suitability column is computed, not annotated.** The engine
+  recomputes it from the format and the sequence source and refuses to load a
+  row where the two disagree, so the column cannot drift away from the facts
+  it claims to summarise.
 
 ## What M3 established
 
@@ -195,6 +234,7 @@ uv run python scripts/vax_anatomy.py --write      # refresh docs/m0_vax_anatomy.
 uv run python scripts/codon_optimizer.py --write   # refresh docs/m1_codon_optimizer.md
 uv run python scripts/construct_assembler.py --write  # refresh docs/m2_construct_assembler.md
 uv run python scripts/venom_construct.py --write      # refresh docs/m3_ecarpholin_s_construct.md
+uv run python scripts/candidate_tracker.py --write    # refresh docs/m4_candidate_tracker.md
 ```
 
 Optional tools are installed on demand rather than declared as extras, so that
@@ -216,18 +256,23 @@ src/mrna/optimize.py     the codon optimiser: block dynamic program plus repairs
 src/mrna/utr.py          the UTR library: borrowed elements, each with its source
 src/mrna/leader.py       the signal peptide library, for secreted payloads
 src/mrna/assemble.py     the construct assembler and the regulatory-format element table
+src/mrna/leader.py       the signal peptide library, for secreted payloads
+src/mrna/candidates.py   the curated candidate table for the Big Four, with its sources
+src/mrna/tracker.py      the tracker engine: validation, coverage and gap analysis
 src/mrna/reference.py    loaders for the committed reference data
 src/mrna/fasta.py        minimal FASTA reader and writer
 scripts/                 prepare_reference_data.py, vax_anatomy.py, codon_optimizer.py,
-                         construct_assembler.py, venom_construct.py
+                         construct_assembler.py, venom_construct.py, candidate_tracker.py
 data/reference/          committed reference sequences, each with provenance
 data/designs/            the designed constructs, with their element tables
+data/candidates.tsv      the published candidate table, generated from the engine
 data/PROVENANCE.md       where every sequence came from, with checksums
 data/reference/CHECKSUMS.sha256   checksums of the raw downloads
 docs/m0_vax_anatomy.md   the M0 report, generated by the script so it cannot drift
 docs/m1_codon_optimizer.md  the M1 report, same deal
 docs/m2_construct_assembler.md  the M2 report, same deal
 docs/m3_ecarpholin_s_construct.md  the M3 design document, same deal
+docs/m4_candidate_tracker.md  the M4 candidate map, same deal
 docs/m1_plan.md          the M1 plan, written before the code
 design-log.md            the running log of design decisions
 tests/                   pytest and hypothesis tests

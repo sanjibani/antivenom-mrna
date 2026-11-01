@@ -49,6 +49,31 @@ by CI, which regenerates them and fails if the committed copies differ.
 | `data/designs/e113_scfv_ecarpholin_s_mrna.fasta` | `scripts/venom_construct.py` | The full 1,233-nt mRNA construct, the 257-residue protein it encodes, and the 122-residue toxin it targets |
 | `data/designs/e113_scfv_ecarpholin_s_mrna.elements.tsv` | `scripts/venom_construct.py` | The element table of that construct, in the column order a regulatory document uses |
 
+## The candidate table
+
+`data/candidates.tsv` is an output of `scripts/candidate_tracker.py`, generated
+from the curated rows in `src/mrna/candidates.py`. It contains no sequences. It
+records, for each published antibody candidate, where the variable-region
+sequence can be found, which for most of them is nowhere that can be opened
+from a public database.
+
+The table was compiled by a survey of the published literature on 2026-11-01,
+using the RCSB full-text search API, PubMed, Google Patents and the IMPACT
+Global Health catalogue *Investigational candidates for snakebite
+envenoming*. Every row carries a citation key, and the citations are printed
+in full at the bottom of `docs/m4_candidate_tracker.md`.
+
+| Source | What was taken from it |
+| --- | --- |
+| RCSB Protein Data Bank | The structural candidates: 8DA1, 8D9Z, 8DA0, 8D9Y (Centi-LNX-D09), 8V13 (Centi-SNX-B03), 8SXP (95Mat5), 9GCN (TPL1158_01_C09), 9HUO, 9FYT, 9HXO (A01), 9CLP (H11) |
+| PubMed | The evidence statements: Kumar et al. 2024 (PMID 38154407), Samanta et al. 2026 (PMID 42715346), Li et al. 2019 (PMID 31689425), Ledsgaard et al. 2023, Glanville et al. 2025 |
+| Google Patents | The patent status column: US20240294618A1 and EP4319816A4, assigned to Centivax Inc |
+| IMPACT Global Health, *Investigational candidates for snakebite envenoming* | The two polyclonal candidates, PCR ID 1708 and PCR ID 1864 |
+
+The table is a survey of the public record, not an exhaustive census. A row
+saying that no sequence was located means that none was located during the
+survey, not that none exists.
+
 ## Sequences held directly in code
 
 A few short sequences live in `src/mrna/` rather than in `data/reference/`, because they are

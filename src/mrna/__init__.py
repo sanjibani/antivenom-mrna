@@ -40,6 +40,15 @@ from mrna.assemble import (
     assemble_construct,
     full_construct,
 )
+from mrna.candidates import (
+    BIG_FOUR,
+    CANDIDATES,
+    EVIDENCE_LEVELS,
+    MRNA_SUITABILITY,
+    SPECIES_TOXIN_FAMILIES,
+    TOXIN_FAMILIES,
+    Candidate,
+)
 from mrna.fasta import read_fasta, write_fasta
 from mrna.leader import HSA_SIGNAL_PEPTIDE, Leader
 from mrna.motifs import CANDIDATE_MOTIFS, DEFAULT_MOTIFS, Motif, MotifHit
@@ -61,6 +70,7 @@ from mrna.sequence import (
     gc_content,
     translate,
 )
+from mrna.tracker import CandidateTracker, Gap, derive_mrna_suitability
 from mrna.utr import (
     AES_ELEMENT,
     AES_MTRNR1_3UTR,
@@ -69,7 +79,7 @@ from mrna.utr import (
     Utr,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
     "A110_POLYA",
@@ -77,20 +87,29 @@ __all__ = [
     "AES_ELEMENT",
     "AES_MTRNR1_3UTR",
     "ALPHA_GLOBIN_5UTR",
+    "BIG_FOUR",
+    "CANDIDATES",
     "CANDIDATE_MOTIFS",
     "CAP1",
     "CODON_TABLE",
     "DEFAULT_MOTIFS",
+    "EVIDENCE_LEVELS",
     "HSA_SIGNAL_PEPTIDE",
     "HUMAN_POLICY",
+    "MRNA_SUITABILITY",
     "MTRNR1_ELEMENT",
+    "SPECIES_TOXIN_FAMILIES",
     "STOP_CODONS",
+    "TOXIN_FAMILIES",
+    "Candidate",
+    "CandidateTracker",
     "Cap",
     "Construct",
     "ConstructPart",
     "ConstructReport",
     "DesignPolicy",
     "ElementMotifHit",
+    "Gap",
     "KozakContext",
     "LayoutCheck",
     "LayoutElement",
@@ -110,6 +129,7 @@ __all__ = [
     "codon_adaptation_index",
     "codon_agreement",
     "codon_counts",
+    "derive_mrna_suitability",
     "find_orf",
     "full_construct",
     "gc_content",

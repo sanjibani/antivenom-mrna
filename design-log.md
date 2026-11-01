@@ -37,7 +37,7 @@ The template, to be copied for any entry:
 >
 > **With more information.** ...
 
-To fill one in, replace the line
+To fill one in, replace the placeholder line
 
 ```
 **Owner's note.** _to be written by the project owner_
@@ -48,6 +48,9 @@ to be a biology essay, and it does not need to agree with the `Why` section.
 If the reasoning disagrees with the implementation, that disagreement is the
 most valuable sentence in this log, and it belongs in the log before it
 belongs in a commit.
+
+That placeholder appears once per entry in this log, twenty-two times in
+total. This instruction block is not one of them.
 
 ---
 
@@ -615,12 +618,138 @@ that same C-terminal myotoxic loop.
 
 ---
 
+## M4: the candidate tracker
+
+### 2026-11-01, the tracker is an engine and not a table
+
+**Decision.** The candidate map is a Python module that validates itself, and
+the published table and report are generated from it. A row with a value
+outside a controlled vocabulary is rejected, and so is a row with a duplicate
+identity.
+
+**Why.** A literature map is a set of claims about other people's work, and
+claims are exactly the thing that rots. If the table is a file that a human
+edits, then a typo in a species name becomes an unfalsifiable statement, and
+nothing in the repository would notice. If the table is a module that refuses
+to load, a typo is a failed test.
+
+**Consequence.** Twenty-two candidates load, each against a controlled
+vocabulary for toxin family, format, patent status, evidence level and mRNA
+suitability. The published table is `data/candidates.tsv` and the published
+report is `docs/m4_candidate_tracker.md`, and the CI job regenerates both and
+fails if they differ from the committed copies.
+
+**Sources.** `src/mrna/candidates.py`, `src/mrna/tracker.py`,
+`tests/test_tracker.py`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the mRNA suitability column is computed, not annotated
+
+**Decision.** The mRNA suitability of a candidate is derived from its format
+and its sequence source by a rule in the engine, and the engine refuses to
+load a row whose declared value disagrees with the derived one.
+
+**Why.** This is the M0 rule applied to a new kind of data. An annotated
+column is an opinion that a future reader cannot check, and an opinion in a
+table of 22 rows is 22 chances to be wrong. A derived column is either right
+or the table does not load.
+
+**Consequence.** A polyclonal candidate is blocked, because there is no
+defined sequence to transcribe. A monoclonal with no located sequence is
+unknown, because nothing can be said about it. A monoclonal with a public
+sequence is ready when the format is one open reading frame, and adaptable
+when it is not.
+
+**Sources.** `src/mrna/tracker.py`, function `derive_mrna_suitability`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, a sequence that cannot be found is recorded as not found
+
+**Decision.** Where the sequence of a candidate could not be located in a
+public database during the survey, the row says `none` and the report says
+how many rows that is.
+
+**Why.** The tempting alternative is to write "paper" for every candidate
+whose sequence is in a paper's supplementary tables, because that is probably
+true. But probably true is the whole problem. This repository's rule is that
+a claim has to be checkable, and a sequence source that nobody can open is not
+checkable. Writing `none` also turns the absence into the finding it is: for
+an mRNA programme, the number of candidates whose sequence is publicly
+available is the number that decides what can be built.
+
+**Consequence.** Eight of the twenty-two candidates have a locatable
+sequence. The remaining fourteen are recorded as `none` with a note saying
+what was searched. The report leads with that number rather than burying it.
+
+**Sources.** `data/candidates.tsv`, `docs/m4_candidate_tracker.md`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, an empty cell is not always an opportunity
+
+**Decision.** The gap matrix reports every uncovered cell, and the report
+says explicitly that some of them are correct decisions by the field rather
+than holes in it.
+
+**Why.** The Kunitz-type serine protease inhibitors are the anticoagulant
+fraction of viper venom, because they bind the clotting factors directly. An
+antibody against them would protect the clotting cascade, which is the
+opposite of what a patient with a viper bite needs. A tracker that reported
+every empty cell as an opportunity would be pointing the next milestone at a
+design that would make the patient worse off.
+
+**Consequence.** The Kunitz-type cells are empty for both viper species, and
+the report explains why. The gap analysis is still reported in full, because
+hiding a gap would be its own kind of dishonesty, but it is reported with the
+toxin families attached.
+
+**Sources.** `TOXIN_FAMILY_NOTES` in `src/mrna/candidates.py`; Gutiérrez and
+Lomonte 2013, *Toxicon* 42:915-931; Escalante, Rucavado and Fox 2011,
+*J Proteomics* 74:1781-1796.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the bottleneck is sequence availability, not antibody discovery
+
+**Decision.** The headline finding of M4 is stated in the report and computed
+from the table rather than written by hand.
+
+**Why.** There is no shortage of published antibodies against snake venom.
+There are dozens, several of them with animal protection data and some of
+them with crystal structures. What there is not, at the time of writing, is
+a set of those antibodies whose sequences are openly readable. For a project
+whose entire contribution is the mRNA layer, that is the constraint, and
+naming it correctly is more useful than another construct.
+
+**Consequence.** The report leads with the availability count, then names the
+two Big Four gaps that matter: no candidate against krait phospholipase A2,
+which is about two thirds of that venom by mass, and no candidate against the
+metalloproteinases of Indian Russell's viper. Seven uncovered cells belong
+to a Big Four species.
+
+**Sources.** `docs/m4_candidate_tracker.md`, section "What the survey found".
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
 ## Next
 
-The open items for milestone M4 are the tracker: every published candidate
-in the field, recorded in one table with species, toxin family, target,
-antibody, format, sequence source, patent status, what it was tested
-against, evidence level and mRNA suitability. M5 is the cocktail: the same
-engine run over the Big Four, with the combinations the evidence supports.
+The open item for milestone M5 is the cocktail: the same engine run over the
+Big Four, with the combinations the evidence supports. M4 has already
+narrowed it, because the tracker says which toxin families have candidates at
+all, which ones have a public sequence, and which cells are empty. The
+krait phospholipase A2 cell is the one the evidence points at, and it is the
+one where no published candidate exists to reuse.
 
 

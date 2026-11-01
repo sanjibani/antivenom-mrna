@@ -42,4 +42,5 @@ jobs:
           uv run python scripts/codon_optimizer.py --write
           uv run python scripts/construct_assembler.py --write
           uv run python scripts/venom_construct.py --write
+          uv run python scripts/candidate_tracker.py --write
           git diff --exit-code data/ docs/
