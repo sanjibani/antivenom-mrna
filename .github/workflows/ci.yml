@@ -35,7 +35,11 @@ jobs:
       - name: Lint
         run: uv run ruff check .
 
-      - name: Check that the committed reference data is reproducible
+      - name: Check that the committed artifacts are reproducible
         run: |
           uv run python scripts/prepare_reference_data.py
-          git diff --exit-code data/reference/
+          uv run python scripts/vax_anatomy.py --write
+          uv run python scripts/codon_optimizer.py --write
+          uv run python scripts/construct_assembler.py --write
+          uv run python scripts/venom_construct.py --write
+          git diff --exit-code data/ docs/

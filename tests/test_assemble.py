@@ -21,6 +21,7 @@ from mrna.assemble import (
     full_construct,
 )
 from mrna.fasta import read_fasta
+from mrna.leader import Leader
 from mrna.motifs import DEFAULT_MOTIFS
 from mrna.sequence import translate
 from mrna.utr import AES_MTRNR1_3UTR, ALPHA_GLOBIN_5UTR
@@ -55,6 +56,15 @@ def published_cds() -> str:
     return read_fasta(REFERENCE / "bnt162b2_cds.fasta")[0][1]
 
 
+#: The extended signal peptide of the SARS-CoV-2 spike glycoprotein.
+COMIRNATY_SIGNAL_PEPTIDE = Leader(
+    name="sig",
+    sequence="MFVFLVLLPLVSSQCV",
+    description="S glycoprotein signal peptide (extended leader sequence)",
+    citation="WHO INN document 11889, feature table, sig at 55-102",
+)
+
+
 def comirnaty() -> Construct:
     """Rebuild Comirnaty from the published parts."""
     return full_construct(
@@ -63,7 +73,7 @@ def comirnaty() -> Construct:
         coding=published_cds() + SECOND_STOP_CODON,
         utr3=AES_MTRNR1_3UTR,
         poly_a=A110_POLYA,
-        signal_peptide_nt=48,
+        leader=COMIRNATY_SIGNAL_PEPTIDE,
         coding_name="S protein_mut",
         coding_description=(
             "Codon-optimized sequence encoding full-length SARS-CoV-2 spike "

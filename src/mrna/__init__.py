@@ -41,6 +41,7 @@ from mrna.assemble import (
     full_construct,
 )
 from mrna.fasta import read_fasta, write_fasta
+from mrna.leader import HSA_SIGNAL_PEPTIDE, Leader
 from mrna.motifs import CANDIDATE_MOTIFS, DEFAULT_MOTIFS, Motif, MotifHit
 from mrna.optimize import (
     OptimizationResult,
@@ -68,7 +69,7 @@ from mrna.utr import (
     Utr,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     "A110_POLYA",
@@ -80,6 +81,7 @@ __all__ = [
     "CAP1",
     "CODON_TABLE",
     "DEFAULT_MOTIFS",
+    "HSA_SIGNAL_PEPTIDE",
     "HUMAN_POLICY",
     "MTRNR1_ELEMENT",
     "STOP_CODONS",
@@ -92,6 +94,7 @@ __all__ = [
     "KozakContext",
     "LayoutCheck",
     "LayoutElement",
+    "Leader",
     "Motif",
     "MotifHit",
     "OptimizationResult",

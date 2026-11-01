@@ -434,11 +434,152 @@ Target Ther 7(1):94.
 
 ---
 
+## M3: the first venom construct
+
+### 2026-11-01, the payload is a published antibody, and the project does not discover antibodies
+
+**Decision.** The first venom construct encodes E113, a human single-chain
+variable fragment against *Echis carinatus* phospholipase A2, published by
+Kumar, Madni, Chaturvedi and Salunke in *Molecular Immunology* in 2024 and
+deposited as PDB entry 8IA6.
+
+**Why.** Two things had to be true at once. The species had to be one of
+India's Big Four, and the antibody sequence had to be retrievable from a
+source with a permanent identifier, the way the Comirnaty construct was
+retrievable from a WHO document in M0. E113 satisfies both. The alternative
+candidates were rejected for concrete reasons: the broadly neutralising
+Centivax antibodies are protected by patent families and come as Fabs,
+which would need two open reading frames, and the DTU scFvs are published
+without a deposited structure.
+
+**Consequence.** The construct is a single polypeptide, one open reading
+frame, 1,233 nt. The project claims no part in the antibody's discovery, and
+the design document says so in the same words as the README.
+
+**Sources.** Kumar A, Madni ZK, Chaturvedi S, Salunke DM. 2024. Mol Immunol
+165:55-67. PDB entry 8IA6.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the crystallisation tag is removed by script, not by hand
+
+**Decision.** The payload is the deposited construct of PDB 8IA6 minus its
+N-terminal vector residue and its C-terminal hexahistidine tag, and the
+removal is performed by `scripts/prepare_reference_data.py` with an
+assertion on both ends.
+
+**Why.** The deposited entry holds the molecule that was crystallised, which
+is the antibody with an expression handle on it. A therapeutic construct
+should not encode a hexahistidine tag. But a trim done by hand is a trim
+that nobody can check, and the crystallised construct is the sequence whose
+structure was solved, so the reasoning about which residues are real has to
+be recorded rather than assumed. The crystal locates residues 2 to 239 of
+the deposited chain: residue 1, the vector alanine, was never located, and
+so was the tag.
+
+**Consequence.** `write_e113_payload()` refuses to run if the deposited
+construct does not start with the vector residue, does not end with the tag,
+or if the trimmed result does not start with the IGHV3-23 germline sequence
+and end with the IGKC constant region. The payload is therefore pinned to
+the deposited sequence by a test rather than by a copy.
+
+**Sources.** PDB entry 8IA6; `scripts/prepare_reference_data.py`;
+`tests/test_venom_construct.py`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the signal peptide is an element of its own
+
+**Decision.** The N-terminal leader is a separate element of the construct
+and a separate entry in the library, `src/mrna/leader.py`, rather than a
+length argument passed to the assembler.
+
+**Why.** A secreted antibody has to leave the cell, and a signal peptide is
+what takes it there. Two properties made it worth its own module rather than
+a string constant. First, the leader is a stretch of protein, not of DNA:
+signal peptidase reads the protein and cuts it, and the DNA that encodes it
+belongs to the codon optimiser. Second, the leader must be verified against
+the coding region, not merely counted. Passing a `Leader` object means the
+assembler translates the first codons of the coding region and checks that
+they encode the leader it was given, so a mismatch between the design and
+the DNA is an error rather than a silent off-by-one.
+
+**Consequence.** The construct's element table has a `sig` row at 55 to 108,
+exactly as Comirnaty's does at 55 to 102, and the engine raises an error if
+the coding element does not encode the leader it was handed. The chosen
+leader is the 18-residue human serum albumin signal peptide, which is one
+of the two most commonly used in mRNA vaccine designs.
+
+**Sources.** UniProt P02768; Attallah C et al. 2017, Protein Expr Purif
+132:27-33; doi:10.1101/2025.11.25.690495.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the design document has to say what the construct is not
+
+**Decision.** The M3 document contains a section headed "What this construct
+is not", and it is written before the section about what it is.
+
+**Why.** This is the first document in the repository that a venom
+researcher might read as a proposal, and the honest content of it is mostly
+bad news: an scFv is monovalent, it clears in hours, the published data for
+this clone is modest on its own, and an mRNA-encoded antibody is the wrong
+answer to an acute bite. A reader who finds those points buried at the end
+has been sold something. A reader who finds them in the fourth section
+knows exactly what they are looking at.
+
+**Consequence.** The document states that the binding and neutralisation data
+belongs to the antibody made in bacteria, and that an scFv made in a
+mammalian cell from an mRNA template is a different molecule until someone
+shows it is not, because glycosylation, disulfide pairing and folding all
+differ between the two expression systems. It also records that the patent
+position is a negative search result rather than a freedom-to-operate
+opinion.
+
+**Sources.** `docs/m3_ecarpholin_s_construct.md`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the toxin is checked against its own structure
+
+**Decision.** The target of the antibody is taken from UniProt, and the
+crystal structure of the same toxin is used as an independent check that the
+two describe the same molecule.
+
+**Why.** This is the rule M0 established, applied to the first venom design
+rather than only to the calibration set. Ecarpholin S is available from two
+places that were produced by different people for different reasons, and a
+design document that names a toxin has to be able to say which toxin, down
+to the base.
+
+**Consequence.** The UniProt sequence and the PDB 2QHE sequence are
+identical over all 122 residues, and the test suite checks it. The two
+records also converge on the mechanism from different directions: UniProt
+annotates residues 105 to 117 as important for membrane-damaging
+activities, and the source paper places the antibody's CDR regions against
+that same C-terminal myotoxic loop.
+
+**Sources.** UniProt P48650; PDB 2QHE; Zhou X et al. 2008, Biophys J
+95:3366-3380.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
 ## Next
 
-The open items for milestone M3 are the venom constructs themselves: one
-toxin from India's Big Four, one published neutralising antibody against it,
-and a full construct that carries that antibody as the payload on the
-scaffold this milestone built. The scaffold is done and measured. What M3
-adds is the payload and the argument for it.
+The open items for milestone M4 are the tracker: every published candidate
+in the field, recorded in one table with species, toxin family, target,
+antibody, format, sequence source, patent status, what it was tested
+against, evidence level and mRNA suitability. M5 is the cocktail: the same
+engine run over the Big Four, with the combinations the evidence supports.
+
 

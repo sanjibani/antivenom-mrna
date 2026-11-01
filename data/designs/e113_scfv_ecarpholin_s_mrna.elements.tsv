@@ -1,0 +1,7 @@
+element	start	end	length	description
+cap	1	2	2	A modified 5'-cap1 structure (m7G+m3'-5'-ppp-5'-Am). The two nucleotides printed for the cap are the 7-methylguanosine at position 1 and the first backbone nucleotide at position 2, joined by a 5'-to-5' triphosphate.
+5'-UTR	3	54	52	5'-untranslated region derived from human alpha-globin RNA with an optimized Kozak sequence. As used in BNT162b2.
+sig	55	108	54	Human serum albumin signal peptide, which directs the nascent polypeptide into the endoplasmic reticulum for secretion.
+E113 scFv	109	828	720	Codon-optimised single-chain variable fragment E113 against Echis carinatus phospholipase A2, preceded by the human serum albumin signal peptide, followed by a stop codon at 826 to 828.
+3'-UTR	829	1123	295	A 3' untranslated region comprising two sequence elements derived from the amino-terminal enhancer of split (AES) mRNA and the mitochondrial encoded 12S ribosomal RNA, to confer RNA stability and high total protein expression. As used in BNT162b2.
+poly(A)	1124	1233	110	A 110-nucleotide poly(A)-tail consisting of a stretch of 30 adenosine residues, followed by a 10-nucleotide linker sequence and another 70 adenosine residues.

@@ -50,6 +50,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from mrna.anatomy import LayoutElement, Orf, find_orf
+from mrna.leader import Leader
 from mrna.motifs import Motif, find_motifs
 from mrna.params import KOZAK_MINUS3_ALLOWED, KOZAK_PLUS4
 from mrna.sequence import translate
@@ -492,7 +493,7 @@ def full_construct(
     utr3: Utr,
     poly_a: PolyATail,
     cap: Cap = CAP1,
-    signal_peptide_nt: int = 0,
+    leader: Leader | None = None,
     coding_name: str = "antigen",
     coding_description: str = "",
 ) -> Construct:
@@ -506,14 +507,13 @@ def full_construct(
     Args:
         name: Name of the construct.
         utr5: The 5' UTR element.
-        coding: The coding element: signal peptide, then antigen, then the
-            stop codons as they will be printed.
+        coding: The coding element: leader, then antigen, then the stop
+            codons as they will be printed.
         utr3: The 3' UTR element.
         poly_a: The poly(A) tail.
         cap: The 5' cap.
-        signal_peptide_nt: Length of the signal peptide at the start of the
-            coding element, in nucleotides. Zero when the antigen is not
-            secreted.
+        leader: The N-terminal leader, when the payload is secreted. The
+            leader must be the start of the coding element.
         coding_name: Name for the coding element in the element table.
         coding_description: Description for the coding element.
 
@@ -521,19 +521,33 @@ def full_construct(
         The assembled :class:`Construct`.
 
     Raises:
-        ValueError: If the signal peptide is longer than the coding element,
-            or if the parts are not assemblable.
+        ValueError: If the leader is not the start of the coding element, or
+            if the parts are not assemblable.
     """
     cleaned = "".join(coding.split()).upper()
-    if signal_peptide_nt < 0:
-        msg = f"full_construct() got a negative signal peptide length {signal_peptide_nt}"
-        raise ValueError(msg)
-    if signal_peptide_nt > len(cleaned):
-        msg = (
-            f"full_construct() got a signal peptide of {signal_peptide_nt} nt "
-            f"for a coding element of only {len(cleaned)} nt"
-        )
-        raise ValueError(msg)
+    if leader is not None:
+        leader_protein = "".join(leader.sequence.split()).upper()
+        if not leader_protein:
+            msg = "full_construct() was given an empty leader"
+            raise ValueError(msg)
+        codons = len(leader_protein) * 3
+        if len(cleaned) < codons:
+            msg = (
+                f"full_construct() was given a leader of {len(leader_protein)} "
+                f"residues for a coding element of only {len(cleaned)} nt"
+            )
+            raise ValueError(msg)
+        encoded = translate(cleaned[:codons])
+        if encoded != leader_protein:
+            msg = (
+                "full_construct() was given a leader that the coding element "
+                f"does not encode: the coding element starts {encoded!r}, the "
+                f"leader is {leader_protein!r}"
+            )
+            raise ValueError(msg)
+        signal_peptide_nt = codons
+    else:
+        signal_peptide_nt = 0
 
     parts = [
         ConstructPart(
@@ -550,16 +564,13 @@ def full_construct(
         ),
     ]
 
-    if signal_peptide_nt:
+    if leader is not None:
         parts.append(
             ConstructPart(
-                name="sig",
+                name=leader.name,
                 sequence=cleaned[:signal_peptide_nt],
-                description=(
-                    "Signal peptide, which guides translocation of the "
-                    "nascent polypeptide chain into the endoplasmic reticulum."
-                ),
-                citation="",
+                description=leader.description,
+                citation=leader.citation,
             ),
         )
 

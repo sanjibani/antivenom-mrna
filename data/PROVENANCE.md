@@ -21,6 +21,10 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `uniprot_P42212_gfp.fasta` | Green fluorescent protein from Aequorea victoria, the teaching example for M1 | <https://rest.uniprot.org/uniprotkb/P42212.fasta> | UniProt, CC-BY 4.0 |
 | `kazusa_homo_sapiens_2020.txt` | Homo sapiens codon usage table, 93,487 coding sequences | <https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=9606&aa=1&style=N> | Kazusa Codon Usage Database, Nakamura et al. 2000 |
 | `biontech_bnt162b2_primary.doc` | An earlier attempt to fetch the WHO document from the INN programme host; it now returns an HTML page rather than the document. Kept only to record the attempt | <https://mednet-communities.net/inn/db/media/docs/11889.doc> | not used |
+| `rcsb_8IA6_scfv_e113.fasta` | The E113 single-chain variable fragment, the antibody payload of the first venom construct. Deposited 2023-02-07, released 2024-02-14 | <https://www.rcsb.org/fasta/entry/8IA6/display> | RCSB Protein Data Bank. Deposited by Kumar A, Madni ZK, Salunke DM. Paper: Mol Immunol 165:55-67, doi:10.1016/j.molimm.2023.12.006 |
+| `rcsb_2QHE_ecarpholin_S.fasta` | Ecarpholin S, the Ser49 myotoxic phospholipase A2 of *Echis carinatus*, the toxin E113 binds. 2.0 A crystal structure | <https://www.rcsb.org/fasta/entry/2QHE/display> | RCSB Protein Data Bank. Paper: Biophys J 95:3366-3380, doi:10.1529/biophysj.107.117747 |
+| `uniprot_P48650_ecarpholin_S.fasta` | Ecarpholin S, the same toxin, from the sequence database | <https://rest.uniprot.org/uniprotkb/P48650.fasta> | UniProt, CC-BY 4.0 |
+| `uniprot_P02768_albumin.fasta` | Human serum albumin precursor, the source of the signal peptide used by the venom constructs | <https://rest.uniprot.org/uniprotkb/P02768.fasta> | UniProt, CC-BY 4.0 |
 
 ## Derived files
 
@@ -31,6 +35,19 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `sars_cov2_spike_P0DTC2.fasta` | `scripts/prepare_reference_data.py` | The UniProt reference protein, header preserved |
 | `gfp_P42212.fasta` | `scripts/prepare_reference_data.py` | The UniProt GFP reference protein, header preserved |
 | `homo_sapiens_codon_usage_kazusa.tsv` | `scripts/prepare_reference_data.py` | The Kazusa table, parsed into a tab-separated file with its citation in the header |
+| `e113_scfv.fasta` | `scripts/prepare_reference_data.py` | The 239-residue E113 single-chain variable fragment: the deposited construct of PDB 8IA6 minus the N-terminal vector residue and the C-terminal hexahistidine expression tag |
+| `ecarpholin_S_P48650.fasta` | `scripts/prepare_reference_data.py` | The UniProt ecarpholin S record, header preserved |
+| `albumin_P02768.fasta` | `scripts/prepare_reference_data.py` | The UniProt human serum albumin precursor record, header preserved |
+
+## Designed constructs
+
+These are outputs, not inputs. They are written by `scripts/venom_construct.py` and are checked
+by CI, which regenerates them and fails if the committed copies differ.
+
+| File | Produced by | Content |
+| --- | --- | --- |
+| `data/designs/e113_scfv_ecarpholin_s_mrna.fasta` | `scripts/venom_construct.py` | The full 1,233-nt mRNA construct, the 257-residue protein it encodes, and the 122-residue toxin it targets |
+| `data/designs/e113_scfv_ecarpholin_s_mrna.elements.tsv` | `scripts/venom_construct.py` | The element table of that construct, in the column order a regulatory document uses |
 
 ## Sequences held directly in code
 
@@ -47,6 +64,7 @@ its own docstring.
 | `AES_MTRNR1_3UTR` | `src/mrna/utr.py` | 295 nt, the 3' UTR of BNT162b2 | WHO INN document 11889, positions 3880-4174 | decomposes exactly into the two elements above plus the document's own 6-nt prefix and 11-nt suffix |
 | `CAP1` | `src/mrna/assemble.py` | 2 nt, the cap footprint | WHO INN document 11889, '5'-capping structure' | none available; it is a chemical structure |
 | `A110_POLYA` | `src/mrna/assemble.py` | 110 nt, A30 + `GCATATGACT` + A70 | WHO INN document 11889, positions 4175-4284 | none available |
+| `HSA_SIGNAL_PEPTIDE` | `src/mrna/leader.py` | 18 aa, the human serum albumin signal peptide | UniProt P02768, signal peptide, residues 1 to 18 | the same 18 residues are quoted as a commonly used mRNA vaccine signal peptide in doi:10.1101/2025.11.25.690495 |
 
 ## Checksums
 

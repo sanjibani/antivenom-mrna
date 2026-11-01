@@ -181,6 +181,114 @@ def write_reference_gfp() -> Path:
     return target
 
 
+#: The C-terminal expression tag of the crystallised E113 construct: the
+#: vector's own residues followed by a hexahistidine tag. It is an
+#: expression and purification handle, not part of the antibody, so it is
+#: not encoded into the designed construct.
+#:
+#: Source: the deposited construct of PDB entry 8IA6, entity 1.
+EXPRESSION_TAG = "RAAALEHHHHHH"
+
+#: The first residue of the deposited E113 construct is an alanine that is
+#: not part of the human IGHV3-23 open reading frame, and it was not located
+#: in the crystal. It is a vector artefact and is removed with the tag.
+#:
+#: Source: the deposited construct of PDB entry 8IA6, entity 1, compared
+#: with the human IGHV3-23 germline sequence.
+VECTOR_N_TERMINUS = "A"
+
+#: The two ends of the antibody proper, used to check the trim.
+#:
+#: ``EVQLLESGGG`` is the start of the human IGHV3-23 germline open reading
+#: frame and ``FGQGTKVEIK`` is the end of the human IGKC constant region.
+ANTIBODY_N_TERMINUS = "EVQLLESGGG"
+ANTIBODY_C_TERMINUS = "FGQGTKVEIK"
+
+
+def write_e113_payload() -> Path:
+    """Extract the E113 single-chain variable fragment from the PDB construct.
+
+    The deposited construct is a crystallisation construct: the antibody,
+    with a vector residue at the N-terminus and a hexahistidine expression
+    tag at the C-terminus. This function removes both and writes the
+    antibody itself, which is what a therapeutic construct encodes.
+
+    Args:
+        None.
+
+    Returns:
+        The path of the written file.
+
+    Raises:
+        ValueError: If the deposited construct does not have the expected
+            ends, which would mean the trim has to be revisited.
+    """
+    records = read_fasta(RAW / "rcsb_8IA6_scfv_e113.fasta")
+    if not records:
+        msg = "rcsb_8IA6_scfv_e113.fasta contains no records"
+        raise ValueError(msg)
+    _, deposited = records[0]
+
+    if not deposited.startswith(VECTOR_N_TERMINUS):
+        msg = "the deposited E113 construct does not start with the expected vector residue"
+        raise ValueError(msg)
+    if not deposited.endswith(EXPRESSION_TAG):
+        msg = "the deposited E113 construct does not end with the expected expression tag"
+        raise ValueError(msg)
+
+    payload = deposited[len(VECTOR_N_TERMINUS) : -len(EXPRESSION_TAG)]
+    if not payload.startswith(ANTIBODY_N_TERMINUS):
+        msg = "the trimmed E113 payload does not start with the IGHV3-23 germline sequence"
+        raise ValueError(msg)
+    if not payload.endswith(ANTIBODY_C_TERMINUS):
+        msg = "the trimmed E113 payload does not end with the IGKC constant region"
+        raise ValueError(msg)
+
+    header = (
+        "E113 single-chain variable fragment, anti-Echis carinatus PLA2 | "
+        "source: PDB entry 8IA6, entity 1, deposited by Kumar A, Madni ZK, "
+        "Salunke DM | the deposited construct minus the N-terminal vector "
+        "residue and the C-terminal expression tag | length 239 aa = "
+        "VH (117 aa) + linker (15 aa) + VL (107 aa)"
+    )
+    target = OUT / "e113_scfv.fasta"
+    write_fasta(target, [(header, payload)])
+    return target
+
+
+def write_ecarpholin_s() -> Path:
+    """Normalise the downloaded UniProt ecarpholin S record.
+
+    Ecarpholin S is the Lys49 myotoxic phospholipase A2 of *Echis
+    carinatus*, the saw-scaled viper of India's Big Four, and it is the
+    antigen that the E113 scFv binds.
+    """
+    records = read_fasta(RAW / "uniprot_P48650_ecarpholin_S.fasta")
+    if not records:
+        msg = "uniprot_P48650_ecarpholin_S.fasta contains no records"
+        raise ValueError(msg)
+    header, sequence = records[0]
+    target = OUT / "ecarpholin_S_P48650.fasta"
+    write_fasta(target, [(header, sequence)])
+    return target
+
+
+def write_albumin() -> Path:
+    """Normalise the downloaded UniProt human serum albumin record.
+
+    The signal peptide of this precursor is the leader used by the venom
+    constructs.
+    """
+    records = read_fasta(RAW / "uniprot_P02768_albumin.fasta")
+    if not records:
+        msg = "uniprot_P02768_albumin.fasta contains no records"
+        raise ValueError(msg)
+    header, sequence = records[0]
+    target = OUT / "albumin_P02768.fasta"
+    write_fasta(target, [(header, sequence)])
+    return target
+
+
 def write_reference_protein() -> Path:
     """Normalise the downloaded UniProt SARS-CoV-2 spike record."""
     records = read_fasta(RAW / "uniprot_P0DTC2_spike.fasta")
@@ -225,7 +333,14 @@ def main() -> None:
     mrna_path = write_bnt162b2_mrna(who_sequence)
     print(f"wrote {mrna_path.relative_to(ROOT)}")
 
-    for path in (write_bnt162b2_cds(), write_reference_protein(), write_reference_gfp()):
+    for path in (
+        write_bnt162b2_cds(),
+        write_reference_protein(),
+        write_reference_gfp(),
+        write_e113_payload(),
+        write_ecarpholin_s(),
+        write_albumin(),
+    ):
         print(f"wrote {path.relative_to(ROOT)}")
 
     print("\nsha256 of raw downloads:")

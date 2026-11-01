@@ -24,6 +24,7 @@ import sys
 from pathlib import Path
 
 from mrna.assemble import A110_POLYA, Construct, full_construct
+from mrna.leader import Leader
 from mrna.motifs import DEFAULT_MOTIFS
 from mrna.optimize import optimize_cds
 from mrna.policy import HUMAN_POLICY
@@ -51,6 +52,22 @@ PUBLISHED_LAYOUT: tuple[tuple[str, int, int], ...] = (
 #: before the construct can be reproduced.
 SECOND_STOP_CODON = "TGA"
 
+#: The extended signal peptide of the SARS-CoV-2 spike glycoprotein, as
+#: printed in the WHO INN document.
+COMIRNATY_SIGNAL_PEPTIDE = Leader(
+    name="sig",
+    sequence="MFVFLVLLPLVSSQCV",
+    description=(
+        "S glycoprotein signal peptide (extended leader sequence), which "
+        "guides translocation of the nascent polypeptide chain into the "
+        "endoplasmic reticulum."
+    ),
+    citation=(
+        "WHO International Nonproprietary Names Programme document 11889 "
+        "(Comirnaty), February 2021, feature table, sig at positions 55-102."
+    ),
+)
+
 
 def comirnaty_parts() -> tuple[Construct, str]:
     """Rebuild Comirnaty from the published parts.
@@ -66,7 +83,7 @@ def comirnaty_parts() -> tuple[Construct, str]:
         coding=published_cds + SECOND_STOP_CODON,
         utr3=AES_MTRNR1_3UTR,
         poly_a=A110_POLYA,
-        signal_peptide_nt=48,
+        leader=COMIRNATY_SIGNAL_PEPTIDE,
         coding_name="S protein_mut",
         coding_description=(
             "Codon-optimized sequence encoding full-length SARS-CoV-2 spike "

@@ -22,7 +22,8 @@ Two artifacts, in this order of importance:
 1. **The designs.** Full mRNA constructs for India-relevant venom targets:
    5' cap chemistry, 5' UTR, codon-optimised coding sequence, 3' UTR, poly(A)
    tail, and a provenance table that says where every antibody sequence came
-   from. These arrive from milestone M3 onward.
+   from. The first one has landed in [M3](docs/m3_ecarpholin_s_construct.md):
+   an E113 scFv against ecarpholin S from the saw-scaled viper.
 2. **The engine.** A small, readable Python library that measures and builds
    mRNA constructs. It is useful on its own, and it is how the designs can be
    checked by anyone who does not trust the author.
@@ -82,10 +83,42 @@ post, and a validation signal, so that there are no silent stretches.
 | M0 | `vax_anatomy`: reverse-engineer the anatomy of a licensed mRNA vaccine | First public post; computed features match published values | Done, see [the M0 report](docs/m0_vax_anatomy.md) |
 | M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Second artifact, first repository views | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
 | M2 | Full-construct assembler, curated UTR library, secondary-structure checks | First tool someone else can use | Done, see [the M2 report](docs/m2_construct_assembler.md) |
-| M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Not started |
+| M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Not started |
 | M5 | Full Big Four coverage and a polyvalent cocktail design | Preprint and launch thread | Not started |
 | M6+ | Regional variants, partner outreach, design iteration | Sustained cadence | Not started |
+
+## What M3 established
+
+The first venom construct in the repository. It encodes a published human
+single-chain variable fragment against a toxin of the saw-scaled viper, on
+the cap, UTR and poly(A) scaffold that M2 built and measured against a
+licensed vaccine.
+
+- **The toxin is ecarpholin S** (*Echis carinatus*, sochurek), the myotoxic
+  Ser49 phospholipase A2, UniProt P48650, structure PDB 2QHE. The UniProt
+  sequence and the crystal structure are the same molecule, checked
+  base for base.
+- **The antibody is E113**, a human scFv, PDB 8IA6, from Kumar, Madni,
+  Chaturvedi and Salunke, *Molecular Immunology* 2024. The deposited entry
+  holds a crystallisation construct, so the vector residue and the
+  hexahistidine tag are removed by the reference-data script, not by hand.
+- **The construct is 1,233 nt** and reads line by line against Comirnaty:
+  cap at 1 to 2, 5' UTR at 3 to 54, signal peptide at 55 to 108, payload at
+  109 to 828, 3' UTR at 829 to 1123, poly(A) at 1124 to 1233.
+- **The payload is a signal peptide plus a 239-residue scFv**, 257 residues
+  in all, with the coding region at GC 0.6381 and CAI 0.9854 against the
+  human codon table.
+- **Two independent sources put the epitope on the part of the toxin that
+  does the damage.** UniProt annotates residues 105 to 117 as "important
+  for membrane-damaging activities", and the source paper's structural model
+  places the antibody's CDR regions against that same C-terminal myotoxic
+  loop.
+
+The design document spends a section on what the construct is **not**, which
+is the part worth reading: an scFv is monovalent and clears in hours, the
+published data for this clone is modest on its own, and an mRNA-encoded
+antibody is the wrong answer to an acute bite.
 
 ## What M2 established
 
@@ -161,6 +194,7 @@ uv run pytest                            # run the test suite
 uv run python scripts/vax_anatomy.py --write      # refresh docs/m0_vax_anatomy.md
 uv run python scripts/codon_optimizer.py --write   # refresh docs/m1_codon_optimizer.md
 uv run python scripts/construct_assembler.py --write  # refresh docs/m2_construct_assembler.md
+uv run python scripts/venom_construct.py --write      # refresh docs/m3_ecarpholin_s_construct.md
 ```
 
 Optional tools are installed on demand rather than declared as extras, so that
@@ -180,17 +214,20 @@ src/mrna/policy.py       the design policy dataclass the optimiser obeys
 src/mrna/motifs.py       forbidden motifs, each with a citation and a verified flag
 src/mrna/optimize.py     the codon optimiser: block dynamic program plus repairs
 src/mrna/utr.py          the UTR library: borrowed elements, each with its source
+src/mrna/leader.py       the signal peptide library, for secreted payloads
 src/mrna/assemble.py     the construct assembler and the regulatory-format element table
 src/mrna/reference.py    loaders for the committed reference data
 src/mrna/fasta.py        minimal FASTA reader and writer
 scripts/                 prepare_reference_data.py, vax_anatomy.py, codon_optimizer.py,
-                         construct_assembler.py
+                         construct_assembler.py, venom_construct.py
 data/reference/          committed reference sequences, each with provenance
+data/designs/            the designed constructs, with their element tables
 data/PROVENANCE.md       where every sequence came from, with checksums
 data/reference/CHECKSUMS.sha256   checksums of the raw downloads
 docs/m0_vax_anatomy.md   the M0 report, generated by the script so it cannot drift
 docs/m1_codon_optimizer.md  the M1 report, same deal
 docs/m2_construct_assembler.md  the M2 report, same deal
+docs/m3_ecarpholin_s_construct.md  the M3 design document, same deal
 docs/m1_plan.md          the M1 plan, written before the code
 design-log.md            the running log of design decisions
 tests/                   pytest and hypothesis tests

@@ -25,7 +25,7 @@ The element table the assembler emits, in the document's format:
 | --- | --- | --- |
 | cap | A modified 5'-cap1 structure (m7G+m3'-5'-ppp-5'-Am). The two nucleotides printed for the cap are the 7-methylguanosine at position 1 and the first backbone nucleotide at position 2, joined by a 5'-to-5' triphosphate. | 1-2 |
 | 5'-UTR | 5'-untranslated region derived from human alpha-globin RNA with an optimized Kozak sequence. As used in BNT162b2. | 3-54 |
-| sig | Signal peptide, which guides translocation of the nascent polypeptide chain into the endoplasmic reticulum. | 55-102 |
+| sig | S glycoprotein signal peptide (extended leader sequence), which guides translocation of the nascent polypeptide chain into the endoplasmic reticulum. | 55-102 |
 | S protein_mut | Codon-optimized sequence encoding full-length SARS-CoV-2 spike (S) glycoprotein containing mutations K986P and V987P to ensure the S glycoprotein remains in an antigenically optimal pre-fusion conformation; stop codons: 3874-3879 (underlined) | 103-3879 |
 | 3'-UTR | A 3' untranslated region comprising two sequence elements derived from the amino-terminal enhancer of split (AES) mRNA and the mitochondrial encoded 12S ribosomal RNA, to confer RNA stability and high total protein expression. As used in BNT162b2. | 3880-4174 |
 | poly(A) | A 110-nucleotide poly(A)-tail consisting of a stretch of 30 adenosine residues, followed by a 10-nucleotide linker sequence and another 70 adenosine residues. | 4175-4284 |
