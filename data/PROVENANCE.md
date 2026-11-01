@@ -32,6 +32,22 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `gfp_P42212.fasta` | `scripts/prepare_reference_data.py` | The UniProt GFP reference protein, header preserved |
 | `homo_sapiens_codon_usage_kazusa.tsv` | `scripts/prepare_reference_data.py` | The Kazusa table, parsed into a tab-separated file with its citation in the header |
 
+## Sequences held directly in code
+
+A few short sequences live in `src/mrna/` rather than in `data/reference/`, because they are
+elements a construct *chooses* rather than sequences a construct *describes*. They are inline
+so that a reader can see the whole library in one screen, and each one carries its citation in
+its own docstring.
+
+| Entry | Where | Sequence | Source | Independent check |
+| --- | --- | --- | --- | --- |
+| `ALPHA_GLOBIN_5UTR` | `src/mrna/utr.py` | 52 nt, the 5' UTR of BNT162b2 | WHO INN document 11889, positions 3-54 | printed identically by Fang et al. 2022, Signal Transduct Target Ther 7(1):94, Table 1 |
+| `AES_ELEMENT` | `src/mrna/utr.py` | 136 nt | Orlandini von Niessen et al. 2019, Mol Ther 27(4):824-836 | located at offset 6 of the published 295-nt 3' UTR |
+| `MTRNR1_ELEMENT` | `src/mrna/utr.py` | 142 nt | Orlandini von Niessen et al. 2019, Mol Ther 27(4):824-836 | located at offset 142 of the published 295-nt 3' UTR |
+| `AES_MTRNR1_3UTR` | `src/mrna/utr.py` | 295 nt, the 3' UTR of BNT162b2 | WHO INN document 11889, positions 3880-4174 | decomposes exactly into the two elements above plus the document's own 6-nt prefix and 11-nt suffix |
+| `CAP1` | `src/mrna/assemble.py` | 2 nt, the cap footprint | WHO INN document 11889, '5'-capping structure' | none available; it is a chemical structure |
+| `A110_POLYA` | `src/mrna/assemble.py` | 110 nt, A30 + `GCATATGACT` + A70 | WHO INN document 11889, positions 4175-4284 | none available |
+
 ## Checksums
 
 Regenerate with:

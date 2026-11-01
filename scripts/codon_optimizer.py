@@ -25,6 +25,7 @@ from mrna.fasta import read_fasta
 from mrna.motifs import CANDIDATE_MOTIFS, find_motifs
 from mrna.optimize import codon_agreement, naive_back_translation, optimize_cds
 from mrna.policy import HUMAN_POLICY, DesignPolicy
+from mrna.reference import load_codon_usage, load_single_sequence
 from mrna.sequence import translate
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -32,51 +33,6 @@ REFERENCE = ROOT / "data" / "reference"
 RAW = REFERENCE / "raw"
 
 DISCLAIMER = "In-silico designs. No therapeutic efficacy demonstrated. Not medical advice."
-
-
-def load_usage_table(path: Path) -> dict[str, float]:
-    """Load the committed Kazusa human codon usage table.
-
-    Args:
-        path: Path to the TSV file written by ``prepare_reference_data.py``.
-
-    Returns:
-        Mapping of codon to synonymous usage fraction.
-
-    Raises:
-        ValueError: If the file contains no codon rows.
-    """
-    table: dict[str, float] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line or line.startswith("#"):
-            continue
-        fields = line.split("\t")
-        if len(fields) < 3 or fields[1] == "*":
-            continue
-        table[fields[0]] = float(fields[2])
-    if not table:
-        msg = f"{path}: no codon usage rows found"
-        raise ValueError(msg)
-    return table
-
-
-def load_single_sequence(path: Path) -> str:
-    """Load the first record of a FASTA file as a plain sequence.
-
-    Args:
-        path: Path to the FASTA file.
-
-    Returns:
-        The sequence string.
-
-    Raises:
-        ValueError: If the file has no records.
-    """
-    records = read_fasta(path)
-    if not records:
-        msg = f"{path}: no FASTA records found"
-        raise ValueError(msg)
-    return records[0][1]
 
 
 def measure(cds: str, usage_table: dict[str, float], policy: DesignPolicy) -> dict[str, float]:
@@ -103,7 +59,7 @@ def build_report() -> str:
     Returns:
         The report as a markdown string.
     """
-    usage_table = load_usage_table(REFERENCE / "homo_sapiens_codon_usage_kazusa.tsv")
+    usage_table = load_codon_usage(REFERENCE / "homo_sapiens_codon_usage_kazusa.tsv")
     policy = HUMAN_POLICY
 
     assemblies = read_fasta(RAW / "naalytics_figure1figure2_032321.fasta")

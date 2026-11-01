@@ -293,10 +293,152 @@ block is reported rather than hidden.
 
 ---
 
+## M2: the assembler and the UTR library
+
+### 2026-11-01, the cap is a chemical footprint, not a stretch of nucleotides
+
+**Decision.** The assembler models the cap as a two-nucleotide footprint that
+carries a chemical structure, and the 5' UTR element is numbered from
+position 3, exactly as the WHO document numbers it.
+
+**Why.** The document prints `cap G1A2 = m7G+m3'-5'-ppp-5'-Am2'-3'-p-`, which
+says the 7-methylguanosine at position 1 is joined to the first backbone
+nucleotide at position 2 by a 5'-to-5' triphosphate. So the cap occupies two
+printed positions even though it is a modification rather than a sequence.
+The consequence is that the same 5' UTR is quoted at 52 nt by the WHO
+document, at 53 nt when the first backbone nucleotide is counted, and at 54 nt
+when the cap guanosine is counted too. All three describe the same molecule,
+and the engine had to pick one convention before it could emit a table.
+
+**Consequence.** The engine uses the document's numbering, because the
+document's coordinates are the ones a design has to match, and because the
+rebuild test would fail against any other convention. The UTR library
+records the alternative lengths in the note on the 5' UTR entry, so a reader
+who counts by hand does not conclude the engine is wrong.
+
+**Sources.** WHO INN document 11889, February 2021, section '5'-capping
+structure'; Kariko K et al. 2005, Immunity 23(2):165-175; Kariko K et al.
+2008, Mol Ther 16(11):1833-1840.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the acceptance test is a rebuild, not a self-consistency check
+
+**Decision.** The assembler's acceptance criterion is that it reproduces
+Comirnaty from published parts: the same 4,284 nucleotides and the same six
+rows of the element table, with the mismatch count reported.
+
+**Why.** Every other number this repository publishes is a number we
+produced, which a reader has to take on trust. A rebuild is different. The
+inputs come from published sources, the expected output comes from a
+regulatory document, and the two are compared without either side being
+adjusted afterwards. A tool that can put a licensed product back together
+from its parts is a tool whose output for an antivenom construct is worth
+reading.
+
+**Consequence.** The rebuild lands on 4,284 of 4,284 nucleotides with zero
+mismatches and reproduces all six published coordinates exactly. Three of the
+4,284 nucleotides, 0.07 per cent, come from the document being reproduced:
+its second of two consecutive stop codons, which the published coding
+sequence transcription stops short of. The report states that openly rather
+than letting a zero look cleaner than it is.
+
+**Sources.** `src/mrna/assemble.py`, `tests/test_assemble.py`,
+`docs/m2_construct_assembler.md`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, motif scope is per element, and a licensed product proves why
+
+**Decision.** The assembler reports forbidden-motif occurrences per element,
+never as a single verdict for the whole construct.
+
+**Why.** The M1 motif policy was scoped to the coding region, and that scope
+was correct. A polyadenylation signal inside a coding region can cause
+premature cleavage and a transcript with no in-frame stop codon, which is a
+real defect. The same signal in a 5' UTR has no cleavage site upstream of it
+and is harmless. Applying the coding-region rule to the whole construct
+would have failed a product that two regulators approved, which is exactly
+the failure mode that makes a rule wrong rather than the rule being too
+strict.
+
+**Consequence.** Comirnaty carries the canonical AAUAAA signal exactly
+twice, once in the 5' UTR at 4 to 9 and once in the 3' UTR at 4099 to 4104,
+and exactly zero times in its coding region. The engine reports all three
+facts, and the M2 report explains why the two in the UTRs are not defects.
+
+**Sources.** Proudfoot NJ, Brownlee BG. 1976. Nucleic Acids Res
+3(7):1183-1190. Fitzgerald PC, Shenk T. 1981. Proc Natl Acad Sci USA
+78(7):4182-4185.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, upstream start codons belong to the UTR, not to the coding region
+
+**Decision.** The check for ATG codons upstream of the intended start codon
+lives in the assembler, where the real 5' UTR and the real Kozak context are
+known, and it reports the context of each one rather than just counting them.
+
+**Why.** The M1 amendment moved this check out of the optimiser on the
+ground that it is a 5' UTR constraint. That was right about the location and
+incomplete about the question. A start codon in the 5' UTR competes with the
+intended one, and how well it competes depends on the Kozak context around
+it: Kozak 1986 showed that the purine at position -3 and the G at position
++4 are the two positions that matter most. An upstream ATG in a weak
+context is noise. An upstream ATG in a strong one is a design error.
+
+**Consequence.** `Construct.upstream_starts()` returns every ATG in the 5'
+UTR with its -3 and +4 bases and whether it matches the consensus at both.
+Comirnaty's 5' UTR has none, so the new check does not retroactively
+condemn a licensed product.
+
+**Sources.** Kozak M. 1986. Cell 44(2):283-292.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the UTR library holds borrowed elements, not invented ones
+
+**Decision.** The UTR library ships two entries: the human alpha-globin 5'
+UTR with an optimised Kozak sequence, and the AES plus mitochondrial 12S
+rRNA 3' UTR. Both are the elements Comirnaty uses, and both carry the
+citation that justifies them.
+
+**Why.** The project's whole argument is that the design space is mostly
+arithmetic and that the inputs should be published ones. Borrowing a UTR
+that a regulator has already accepted inside a licensed product is a
+smaller claim than inventing a better one, and it is the only claim this
+project can support without a wet lab. It is also the claim that keeps the
+antivenom construct comparable to a licensed product line by line, which is
+the format the whole repository is written in.
+
+**Consequence.** The 5' UTR is the 52 nucleotides the WHO document prints at
+positions 3 to 54, independently confirmed by a peer-reviewed review. The
+295-nucleotide 3' UTR decomposes into the 136-nt AES element and the
+142-nt mtRNR1 element that Orlandini von Niessen and colleagues found by
+cell-based screening, in the order the document names them, with the
+document's own 6-nt prefix and 11-nt suffix either side.
+
+**Sources.** WHO INN document 11889, February 2021; Orlandini von Niessen AG
+et al. 2019, Mol Ther 27(4):824-836; Fang E et al. 2022, Signal Transduct
+Target Ther 7(1):94.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
 ## Next
 
-The open items for milestone M2 are the full-construct assembler and the UTR
-library, whose first entries will be the human alpha-globin 5' UTR and the
-AES plus 12S rRNA 3' UTR that Comirnaty uses, both with their citations. The
-assembler should emit the same element table that the WHO document uses, so
-that a venom construct can be compared to a licensed product line by line.
+The open items for milestone M3 are the venom constructs themselves: one
+toxin from India's Big Four, one published neutralising antibody against it,
+and a full construct that carries that antibody as the payload on the
+scaffold this milestone built. The scaffold is done and measured. What M3
+adds is the payload and the argument for it.
+

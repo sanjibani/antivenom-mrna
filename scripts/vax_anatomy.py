@@ -33,6 +33,7 @@ from mrna.anatomy import (
 )
 from mrna.fasta import read_fasta
 from mrna.params import GC_MAX, GC_MIN
+from mrna.reference import load_codon_usage, load_single_sequence
 from mrna.sequence import translate
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -54,51 +55,6 @@ PUBLISHED_LAYOUT: tuple[LayoutElement, ...] = (
     LayoutElement("3'-UTR", 3880, 4174, "AES mRNA and mitochondrial 12S rRNA elements"),
     LayoutElement("poly(A)", 4175, 4284, "30 adenosines, a 10-nt linker, 70 adenosines"),
 )
-
-
-def load_usage_table(path: Path) -> dict[str, float]:
-    """Load a Kazusa-style codon usage table into a codon-to-fraction mapping.
-
-    Args:
-        path: Path to the TSV file written by ``prepare_reference_data.py``.
-
-    Returns:
-        Mapping of codon to synonymous usage fraction.
-
-    Raises:
-        ValueError: If the file contains no codon rows.
-    """
-    table: dict[str, float] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        if not line or line.startswith("#"):
-            continue
-        fields = line.split("\t")
-        if len(fields) < 3 or fields[1] == "*":
-            continue
-        table[fields[0]] = float(fields[2])
-    if not table:
-        msg = f"{path}: no codon usage rows found"
-        raise ValueError(msg)
-    return table
-
-
-def load_single_sequence(path: Path) -> str:
-    """Load the first record of a FASTA file as a plain sequence.
-
-    Args:
-        path: Path to the FASTA file.
-
-    Returns:
-        The sequence string.
-
-    Raises:
-        ValueError: If the file has no records.
-    """
-    records = read_fasta(path)
-    if not records:
-        msg = f"{path}: no FASTA records found"
-        raise ValueError(msg)
-    return records[0][1]
 
 
 def measurement_table(
@@ -173,7 +129,7 @@ def build_report() -> str:
     Returns:
         The report as a markdown string.
     """
-    usage_table = load_usage_table(REFERENCE / "homo_sapiens_codon_usage_kazusa.tsv")
+    usage_table = load_codon_usage(REFERENCE / "homo_sapiens_codon_usage_kazusa.tsv")
     reference_protein = load_single_sequence(REFERENCE / "sars_cov2_spike_P0DTC2.fasta")
 
     who_mrna = load_single_sequence(REFERENCE / "bnt162b2_mrna_who.fasta")
