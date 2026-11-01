@@ -85,8 +85,60 @@ post, and a validation signal, so that there are no silent stretches.
 | M2 | Full-construct assembler, curated UTR library, secondary-structure checks | First tool someone else can use | Done, see [the M2 report](docs/m2_construct_assembler.md) |
 | M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
-| M5 | Full Big Four coverage and a polyvalent cocktail design | Preprint and launch thread | Not started |
+| M5 | The Big Four cocktail, planned from the literature map and built where it can be | First design that names its own blockers | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
 | M6+ | Regional variants, partner outreach, design iteration | Sustained cadence | Not started |
+
+## What M5 established
+
+The Big Four cocktail, and why the published record cannot supply one.
+
+M5 asks the question M4's map was built to answer: if you had to build one
+antibody cocktail covering India's Big Four snakes, which payloads would it
+contain, and what would stop you? The planner in
+[`src/mrna/cocktail.py`](src/mrna/cocktail.py) treats it as a set cover over a
+matrix of species and toxin families, searches it exhaustively rather than
+greedily, and then tightens the question one constraint at a time. The
+attrition down those tiers is the result.
+
+- **The published record runs out long before the design does.** Four tiers, and
+  the cells the plan can cover fall from 9 of 14 to 6, then 2, then 1. The
+  questions are: is there a published candidate at all, can its sequence be
+  located in a public database, is it one polypeptide a single transcript can
+  carry, and has a patent search found nothing covering it.
+- **Indian Russell's viper leaves the plan entirely.** The one recombinant
+  candidate against the dominant toxin of that venom, the camelid VHH MKSS1,
+  has no publicly locatable sequence, so the whole species drops out at the
+  second tier. That is the single most actionable line in the milestone, and
+  it is a data-availability problem rather than a discovery problem.
+- **Three of the five cells no tier covers are viper toxin families that
+  nobody has taken on.** The two viper species of the Big Four between them
+  carry every toxin class that makes a viper bite dangerous, and not one of
+  those classes has a published antibody candidate in the table.
+- **Common krait phospholipase A2 has no candidate at any tier.** Krait venom
+  is about 64.5 per cent phospholipase A2 by mass, so the most under-covered
+  species of the Big Four is the one where a single good antibody would buy
+  the most.
+- **Two constructs can be built from public material.** E113, the scFv already
+  published in M3, reproduced byte for byte by the M5 pipeline, and
+  TPL1158_01_C09, a 123-residue camelid VHH against alpha-cobratoxin from
+  PDB 9GCN. The other four payloads are Fabs or two-chain antibodies:
+  converting them into one transcript means inventing a single-chain format
+  that the published neutralisation data does not describe, so the data would
+  no longer belong to the molecule being transcribed.
+- **The licence is the real blocker, and it is stated as a fact.** A public
+  patent search finds an application covering TPL1158_01_C09: it is named 71
+  times in WO2025078529A1, published by Danmarks Tekniske Universitet. For
+  E113 no application was located. That is a record of what the public patent
+  record said on a date about specific applications, not a freedom-to-operate
+  opinion, and it means an open programme built on these sequences is not free
+  to exist.
+- **Three cells are empty on purpose.** The Kunitz-type serine protease
+  inhibitors are the anticoagulant fraction of viper venom, so an antibody
+  against them would make the coagulopathy worse. The planner says why rather
+  than reporting them as opportunities.
+
+The milestone ships two full constructs, an element table, and a report whose
+every number is computed from the M4 table rather than written by hand.
 
 ## What M4 established
 
@@ -235,6 +287,7 @@ uv run python scripts/codon_optimizer.py --write   # refresh docs/m1_codon_optim
 uv run python scripts/construct_assembler.py --write  # refresh docs/m2_construct_assembler.md
 uv run python scripts/venom_construct.py --write      # refresh docs/m3_ecarpholin_s_construct.md
 uv run python scripts/candidate_tracker.py --write    # refresh docs/m4_candidate_tracker.md
+uv run python scripts/cocktail_design.py --write     # refresh docs/m5_big_four_cocktail.md
 ```
 
 Optional tools are installed on demand rather than declared as extras, so that
@@ -256,13 +309,15 @@ src/mrna/optimize.py     the codon optimiser: block dynamic program plus repairs
 src/mrna/utr.py          the UTR library: borrowed elements, each with its source
 src/mrna/leader.py       the signal peptide library, for secreted payloads
 src/mrna/assemble.py     the construct assembler and the regulatory-format element table
-src/mrna/leader.py       the signal peptide library, for secreted payloads
 src/mrna/candidates.py   the curated candidate table for the Big Four, with its sources
 src/mrna/tracker.py      the tracker engine: validation, coverage and gap analysis
+src/mrna/payload.py      the antibody payloads a construct can carry, and their chains
+src/mrna/cocktail.py     the cocktail planner: exact set cover over species and toxin families
 src/mrna/reference.py    loaders for the committed reference data
 src/mrna/fasta.py        minimal FASTA reader and writer
 scripts/                 prepare_reference_data.py, vax_anatomy.py, codon_optimizer.py,
-                         construct_assembler.py, venom_construct.py, candidate_tracker.py
+                         construct_assembler.py, venom_construct.py, candidate_tracker.py,
+                         cocktail_design.py
 data/reference/          committed reference sequences, each with provenance
 data/designs/            the designed constructs, with their element tables
 data/candidates.tsv      the published candidate table, generated from the engine
@@ -273,6 +328,7 @@ docs/m1_codon_optimizer.md  the M1 report, same deal
 docs/m2_construct_assembler.md  the M2 report, same deal
 docs/m3_ecarpholin_s_construct.md  the M3 design document, same deal
 docs/m4_candidate_tracker.md  the M4 candidate map, same deal
+docs/m5_big_four_cocktail.md  the M5 cocktail plan and its two constructs, same deal
 docs/m1_plan.md          the M1 plan, written before the code
 design-log.md            the running log of design decisions
 tests/                   pytest and hypothesis tests

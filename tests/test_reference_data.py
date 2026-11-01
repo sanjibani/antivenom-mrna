@@ -138,6 +138,30 @@ def test_raw_files_have_not_changed() -> None:
         assert module.sha256(path) == digest, f"{name} changed since download"
 
 
+def test_every_raw_file_has_a_recorded_checksum() -> None:
+    """A raw download without a recorded checksum is unverified.
+
+    Without this check a new raw file could be committed and never added to
+    the checksum file, and the test above would pass without ever looking at
+    it.
+    """
+    recorded = set()
+    for line in (REFERENCE / "CHECKSUMS.sha256").read_text().splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        _digest, name = line.split()
+        recorded.add(name)
+    present = {
+        path.name
+        for path in RAW.iterdir()
+        if path.is_file() and path.name != ".DS_Store"
+    }
+    assert present == recorded, (
+        f"raw files without a recorded checksum: {sorted(present - recorded)}; "
+        f"checksums recorded for files that are absent: {sorted(recorded - present)}"
+    )
+
+
 def test_the_prepared_cds_file_is_reproducible() -> None:
     """Re-running the preparation must reproduce the committed CDS file."""
     load_prepare_script()

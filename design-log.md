@@ -743,13 +743,178 @@ to a Big Four species.
 
 ---
 
+## M5: the Big Four cocktail
+
+### 2026-11-01, a cocktail is a set of antibodies, not a set of rows
+
+**Decision.** The planner groups the candidate table by antibody before it
+searches for a cover, so an antibody that neutralises one toxin family in two
+species is one payload that covers two cells.
+
+**Why.** The M4 table has 22 rows, but one of those rows is a clone and the
+next row is a different clone, and a third row is the same clone again under a
+different toxin. A planner that worked on rows would propose the same
+antibody twice and would credit the plan with coverage it does not have.
+Centi-LNX-D09 is the clearest case: it covers the spectacled cobra and the
+common krait, and it belongs in a plan once.
+
+**Consequence.** The cover is computed over payload groups, and the report
+lists payloads rather than rows. The number of payloads in a plan and the
+number of cells it covers are two different things, and the report shows both.
+
+**Sources.** `PayloadGroup` in `src/mrna/cocktail.py`; the Centi-LNX-D09 rows
+in `src/mrna/candidates.py`; Glanville J, Kwong K, et al. 2025, *Cell*.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the cover is exact, and it refuses rather than degrades
+
+**Decision.** The set cover is found by exhaustive subset search over bitmask
+unions, and when more than sixteen payloads would cover a cell the planner
+raises an error instead of quietly switching to a greedy approximation.
+
+**Why.** A greedy cover picks the payload that covers the most cells first,
+which is usually right and is sometimes wrong, and the difference is invisible
+in the output. It would have been easy to write a greedy planner and a report
+that looked identical. The point of M5 is that the attrition down the tiers is
+a claim about the literature, so the search that produces it has to be exact
+and it has to fail loudly when it can no longer be.
+
+**Consequence.** The plan is minimal by construction, and the test suite
+checks that against an independent brute-force search written differently on
+purpose. The sixteen-payload ceiling is a real limit on the current table, and
+raising it will mean replacing the algorithm, not tuning it.
+
+**Sources.** `_minimum_cover` in `src/mrna/cocktail.py`; the independent
+reference search in `tests/test_cocktail.py`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, a multi-chain payload is not transcribed as one chain
+
+**Decision.** M5 builds constructs only for the two payloads that are already
+one polypeptide. The four Fabs and two-chain antibodies are not converted.
+
+**Why.** Turning a published Fab into a single-chain format is a real
+engineering step that changes the molecule. The published neutralisation data
+belongs to the Fab as it was tested. Transcribing a re-engineered single-chain
+version would carry a citation that no longer describes the thing being
+transcribed, which is the exact failure this repository was built to avoid:
+a sequence in a file that does not match its source.
+
+**Consequence.** Four of the six payloads are named in the report with the
+reason they were not built, and the report states the cost of the conversion
+in residues instead of pretending it is free. The single-transcript question
+is deferred to M6, where a sourced 2A peptide or an internal ribosome entry
+site can be brought in to the standard the rest of the sequences meet.
+
+**Sources.** `Payload.is_single_polypeptide` in `src/mrna/payload.py`; the
+chain records in `data/reference/candidate_fab_chains.fasta`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, the 2A route is deferred, because an unsourced sequence does not enter the repository
+
+**Decision.** Each cocktail member gets its own transcript. The single
+transcript carrying several antibodies is not attempted in M5.
+
+**Why.** The route needs a 2A peptide or an internal ribosome entry site, and
+the sequences for both had to be sourced properly. The attempt to source a
+2A peptide during M5 failed: the publisher's full-text endpoints blocked the
+requests, one returned a non-JSON document, one returned a server error, one
+PDF downloaded empty, the UniProt polyprotein record does not annotate its 2A
+boundaries, and an attribute search for "2A" in the structural database
+returned nothing relevant. The tempting alternative was to type a 2A peptide
+from memory, because it is a well-known short sequence that appears in
+thousands of papers.
+
+**Consequence.** The decision that killed that route is now a rule rather than
+an accident: no sequence enters this repository unless it has been located in
+the database that publishes it and recorded with a checksum. The deferred
+route is documented with its literature, so M6 does not have to search again.
+
+**Sources.** `docs/m5_big_four_cocktail.md`, section 6; Szymczak AL, Workman
+CJ, Wang Y, et al. 2004, *Nat Biotechnol* 22:589-594; Donnelly KL, Smit AF,
+Fitch PM, et al. 2001, *J Gen Virol* 82:2033-2042; Kim JH, Lee HS, et al.
+2014, *BMC Biotechnol* 14:100.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, a generated report computes its own numbers
+
+**Decision.** Every count, list and comparison in the M5 report is computed
+from the candidate table at generation time. The report holds no hardcoded
+figures.
+
+**Why.** The first draft of the report said "four cells have no candidate at
+all" when the planner found five, and it said a patent application covered
+"each of the two payloads" when one of the two has no application located at
+all. Both were written by hand beside a computed table, and both were wrong.
+The M4 lesson that a literature map has to be an engine rather than a table
+applies with more force to a report that is supposed to be the engine's
+output. A generated document is not automatically a true one.
+
+**Consequence.** The test suite recomputes the counts and asserts them
+against the text of the published report, so a hardcoded number fails the
+build instead of shipping. The same discipline applies to the tier table, the
+licence paragraph and the coverage summary.
+
+**Sources.** `build_report` in `scripts/cocktail_design.py`; the report tests
+in `tests/test_cocktail.py`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
+### 2026-11-01, a patent search result is a record of the record, not a clearance
+
+**Decision.** The report states what the public patent record said, on a date,
+about specific applications. It does not say that the sequences are free to
+use, and it does not offer a freedom-to-operate opinion.
+
+**Why.** The M5 survey found that TPL1158_01_C09 is named 71 times in
+WO2025078529A1, and that three other published clones are named in
+WO2023209212A1. Finding an application is a fact. Whether an application
+covers a particular use in a particular jurisdiction is a legal question that
+this repository is not equipped to answer, and the difference between the two
+is the difference between a survey and advice.
+
+**Consequence.** The licence position is reported as its own section, with
+the applications named and the date of the search. The tracker gains a
+`licence-unblocked` tier, which is the strictest one, and the report says
+plainly that it is a floor rather than a clearance.
+
+**Sources.** `WO2025078529A1`, published by Danmarks Tekniske Universitet,
+priority 2023-10-10, published 2025-04-17; `WO2023209212A1`, same
+institution, priority 2022-04-29, published 2023-11-02; the patent status
+column in `src/mrna/candidates.py`.
+
+**Owner's note.** _to be written by the project owner_
+
+---
+
 ## Next
 
-The open item for milestone M5 is the cocktail: the same engine run over the
-Big Four, with the combinations the evidence supports. M4 has already
-narrowed it, because the tracker says which toxin families have candidates at
-all, which ones have a public sequence, and which cells are empty. The
-krait phospholipase A2 cell is the one the evidence points at, and it is the
-one where no published candidate exists to reuse.
+The open item for milestone M6 is no longer a design problem, and that is the
+finding M5 arrived at. The tracker has named the three things that would move
+the plan: a candidate against common krait phospholipase A2, where no
+published candidate exists and the toxin is about two thirds of that venom by
+mass; the metalloproteinases of Indian Russell's viper, where the one
+recombinant candidate has no publicly locatable sequence; and a conversation
+with the two institutions whose published applications cover the sequences
+that do exist.
+
+On the engineering side, M6 has one outstanding design question: whether
+several payloads can share one transcript, which needs a sourced 2A peptide or
+an internal ribosome entry site. Regional venom variants and a design
+iteration against the payload that already exists are the other two strands.
 
 

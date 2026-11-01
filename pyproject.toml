@@ -1,6 +1,6 @@
 [project]
 name = "antivenom-mrna"
-version = "0.4.0"
+version = "0.5.0"
 description = "Open, reproducible, full-construct mRNA designs for India's Big Four venomous snakes, plus the auditable design engine that produced them."
 readme = "README.md"
 requires-python = ">=3.11,<3.14"

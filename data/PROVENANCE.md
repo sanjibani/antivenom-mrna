@@ -25,6 +25,11 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `rcsb_2QHE_ecarpholin_S.fasta` | Ecarpholin S, the Ser49 myotoxic phospholipase A2 of *Echis carinatus*, the toxin E113 binds. 2.0 A crystal structure | <https://www.rcsb.org/fasta/entry/2QHE/display> | RCSB Protein Data Bank. Paper: Biophys J 95:3366-3380, doi:10.1529/biophysj.107.117747 |
 | `uniprot_P48650_ecarpholin_S.fasta` | Ecarpholin S, the same toxin, from the sequence database | <https://rest.uniprot.org/uniprotkb/P48650.fasta> | UniProt, CC-BY 4.0 |
 | `uniprot_P02768_albumin.fasta` | Human serum albumin precursor, the source of the signal peptide used by the venom constructs | <https://rest.uniprot.org/uniprotkb/P02768.fasta> | UniProt, CC-BY 4.0 |
+| `rcsb_9GCN_vhh_tpl1158_01_c09.fasta` | The TPL1158_01_C09 camelid single-domain antibody, the payload of the second cocktail construct, in complex with alpha-cobratoxin. Released 2025-08-06 | <https://www.rcsb.org/fasta/entry/9GCN/display> | RCSB Protein Data Bank. Deposited by the DTU group that published WO2025078529A1. The same entry holds alpha-cobratoxin from *Naja kaouthia* as entity 2 |
+| `rcsb_8DA1_centi_lnx_d09.fasta` | The Centi-LNX-D09 Fab, light and heavy chains, in complex with alpha-bungarotoxin | <https://www.rcsb.org/fasta/entry/8DA1/display> | RCSB Protein Data Bank. Paper: Glanville J, Kwong K, et al. 2025, *Cell*. Patent US20240294618A1 |
+| `rcsb_8V13_centi_snx_b03.fasta` | The Centi-SNX-B03 Fab, heavy and light chains, in complex with a short neurotoxin | <https://www.rcsb.org/fasta/entry/8V13/display> | RCSB Protein Data Bank. Paper: Glanville J, Kwong K, et al. 2025, *Cell*. Patent US20240294618A1 |
+| `rcsb_9CLP_h11_fab.fasta` | The H11 Fab, heavy and light chains, in complex with ecarin | <https://www.rcsb.org/fasta/entry/9CLP/display> | RCSB Protein Data Bank. Released 2024-09-11. Ecarin is the zinc metalloproteinase-disintegrin of *Echis carinatus* |
+| `rcsb_9HUO_a01.fasta` | The A01 monoclonal antibody, light and heavy chains, bound to alpha-cobratoxin at pH 5.5 | <https://www.rcsb.org/fasta/entry/9HUO/display> | RCSB Protein Data Bank. Released 2025-11-19. The same complex is deposited as 9FYT (pH 4.5) and 9HXO (pH 6.0) |
 
 ## Derived files
 
@@ -38,6 +43,8 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `e113_scfv.fasta` | `scripts/prepare_reference_data.py` | The 239-residue E113 single-chain variable fragment: the deposited construct of PDB 8IA6 minus the N-terminal vector residue and the C-terminal hexahistidine expression tag |
 | `ecarpholin_S_P48650.fasta` | `scripts/prepare_reference_data.py` | The UniProt ecarpholin S record, header preserved |
 | `albumin_P02768.fasta` | `scripts/prepare_reference_data.py` | The UniProt human serum albumin precursor record, header preserved |
+| `tpl1158_01_c09_vhh.fasta` | `scripts/prepare_reference_data.py` | The 123-residue TPL1158_01_C09 camelid VHH: entity 1 of PDB 9GCN, selected by script from the entry's polymer entities |
+| `candidate_fab_chains.fasta` | `scripts/prepare_reference_data.py` | The eight antibody chains of the four multi-chain payloads, taken from entries 8DA1, 8V13, 9CLP and 9HUO. The toxin entities in those entries are not written out: they are the targets, not the payloads |
 
 ## Designed constructs
 
@@ -48,6 +55,11 @@ by CI, which regenerates them and fails if the committed copies differ.
 | --- | --- | --- |
 | `data/designs/e113_scfv_ecarpholin_s_mrna.fasta` | `scripts/venom_construct.py` | The full 1,233-nt mRNA construct, the 257-residue protein it encodes, and the 122-residue toxin it targets |
 | `data/designs/e113_scfv_ecarpholin_s_mrna.elements.tsv` | `scripts/venom_construct.py` | The element table of that construct, in the column order a regulatory document uses |
+| `data/designs/big_four_cocktail_mrna.fasta` | `scripts/cocktail_design.py` | The two cocktail constructs that can be transcribed from public material: the 885-nt TPL1158_01_C09 VHH construct and the 1,233-nt E113 construct, with the 123-residue and 239-residue payloads they encode |
+| `data/designs/big_four_cocktail.elements.tsv` | `scripts/cocktail_design.py` | The element table of both constructs, one block per cocktail member, with the member column naming which payload each row belongs to |
+
+The E113 construct in the M5 file is byte for byte the construct published in
+M3. The test suite asserts that, so the two milestones cannot drift apart.
 
 ## The candidate table
 
@@ -73,6 +85,31 @@ in full at the bottom of `docs/m4_candidate_tracker.md`.
 The table is a survey of the public record, not an exhaustive census. A row
 saying that no sequence was located means that none was located during the
 survey, not that none exists.
+
+## The payload table
+
+`src/mrna/payload.py` names six antibody payloads and says where each one
+comes from. Two of them, E113 and TPL1158_01_C09, are single chains and are
+transcribed as they stand. The other four, Centi-LNX-D09, Centi-SNX-B03, H11
+and A01, are Fabs or two-chain antibodies, and their heavy and light chains
+are kept as separate records rather than concatenated: joining them without a
+linker would produce a molecule that no publication describes.
+
+Only the antibody chains are written out. The toxins in the same deposited
+complexes are the targets, and they are already carried by the candidate
+table in `src/mrna/candidates.py` with their own citations.
+
+| Payload | Format | Chains | Source entry | Designed in M5 |
+| --- | --- | --- | --- | --- |
+| E113 | scFv | 1 of 239 aa | 8IA6 entity 1 | yes, and reproduced byte for byte from M3 |
+| TPL1158_01_C09 | VHH | 1 of 123 aa | 9GCN entity 1 | yes |
+| Centi-LNX-D09 | Fab | 2, light 214 aa and heavy 237 aa | 8DA1 entities 1 and 2 | no, two chains |
+| Centi-SNX-B03 | Fab | 2, heavy 230 aa and light 215 aa | 8V13 entities 1 and 2 | no, two chains |
+| H11 | Fab | 2, heavy 217 aa and light 217 aa | 9CLP entities 3 and 4 | no, two chains |
+| A01 | mAb-IgG | 2, light 144 aa and heavy 117 aa | 9HUO entities 2 and 3 | no, two chains |
+
+The chain lengths are what the Protein Data Bank holds, and the test suite
+asserts every one of them.
 
 ## Sequences held directly in code
 

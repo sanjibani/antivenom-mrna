@@ -32,11 +32,13 @@ __all__ = [
     "BIG_FOUR",
     "CANDIDATES",
     "CITATIONS",
+    "CLINICAL_SET",
     "COMMON_NAMES",
     "EVIDENCE_LEVELS",
     "FORMATS",
     "MRNA_SUITABILITY",
     "PATENT_STATUS",
+    "SPECIES_FAMILIES",
     "SPECIES_TOXIN_FAMILIES",
     "TOXIN_FAMILIES",
     "TOXIN_FAMILY_NOTES",
@@ -100,6 +102,20 @@ BIG_FOUR: tuple[str, ...] = (
     "Echis carinatus",
 )
 
+#: The Big Four plus the monocled cobra.
+#:
+#: The monocled cobra, *Naja kaouthia*, is not one of the Big Four, but it is
+#: the other major Indian cobra, it is one of the species Indian polyvalent
+#: antivenom is raised against, and it accounts for a large share of cobra
+#: bites in the country. A cocktail aimed at Indian snakebite that ignored it
+#: would be incomplete in a way that matters, so the planner can be asked for
+#: the Big Four alone or for this wider set.
+#:
+#: Sources: Suraj et al. 2019, *Lancet* 393:2273-2280; and the Indian
+#: polyvalent antivenom literature, which raises pools against both Indian
+#: cobras.
+CLINICAL_SET: tuple[str, ...] = (*BIG_FOUR, "Naja kaouthia")
+
 #: English names, used only in the generated report.
 COMMON_NAMES: dict[str, str] = {
     "Naja naja": "spectacled cobra",
@@ -110,6 +126,25 @@ COMMON_NAMES: dict[str, str] = {
     "Daboia russelii formosensis": "Russell's viper, Taiwan subspecies",
     "Echis carinatus": "saw-scaled viper",
     "Echis carinatus sochureki": "saw-scaled viper, sochurek",
+}
+
+#: The venom family each species belongs to, used only in the generated report.
+#:
+#: This is a fact about the animals rather than a judgement about them. The
+#: three elapid genera carry the neurotoxic and cytotoxic toxins; the two
+#: viper genera carry the haemostatic and haemorrhagic ones. The report
+#: groups its findings by this, because a reader who sees "six cells
+#: uncovered" learns less than a reader who sees which venom and which
+#: toxin class went untouched.
+SPECIES_FAMILIES: dict[str, str] = {
+    "Naja naja": "elapid",
+    "Naja kaouthia": "elapid",
+    "Bungarus caeruleus": "elapid",
+    "Bungarus multicinctus": "elapid",
+    "Daboia russelii": "viper",
+    "Daboia russelii formosensis": "viper",
+    "Echis carinatus": "viper",
+    "Echis carinatus sochureki": "viper",
 }
 
 #: Toxin families that the tracker knows about.
@@ -336,6 +371,18 @@ CITATIONS: dict[str, str] = {
         "RCSB Protein Data Bank entries 9HUO, 9FYT and 9HXO. A01 monoclonal "
         "antibody bound to alpha-cobratoxin at pH 5.5, 4.5 and 6.0."
     ),
+    "DTU2022IgG": (
+        "WO2023209212A1. Neutralisation of alpha-neurotoxins using human "
+        "recombinant IgG antibodies. Danmarks Tekniske Universitet. Priority "
+        "date 2022-04-29, published 2023-11-02. The application names "
+        "2554_01_D11, 368_01_C05 and A01."
+    ),
+    "DTU2025Nanobody": (
+        "WO2025078529A1. Nanobodies capable of cross-binding to several "
+        "different elapid three-finger toxins. Danmarks Tekniske Universitet. "
+        "Priority date 2023-10-10, published 2025-04-17. The application "
+        "names TPL1158_01_C09."
+    ),
     "Ledsgaard2024": (
         "Ledsgaard L, Wade J, Jenkins TP, et al. 2024. Phage display assisted "
         "discovery of a pH-dependent anti-alpha-cobratoxin antibody."
@@ -445,8 +492,8 @@ CANDIDATES: tuple[Candidate, ...] = (
         toxin_target="alpha-cobratoxin",
         antibody_id="2554_01_D11",
         molecule_format="mAb-IgG",
-        sequence_source=("none",),
-        patent_status="not-assessed",
+        sequence_source=("patent:WO2023209212A1",),
+        patent_status="application-pending",
         tested_against=(
             "in vitro patch-clamp neutralisation, and in vivo protection "
             "against Naja kaouthia whole venom"
@@ -455,10 +502,11 @@ CANDIDATES: tuple[Candidate, ...] = (
         mrna_suitability="unknown",
         citation="Ledsgaard2023",
         notes=(
-            "Derived from 368_01_C05 by light-chain shuffling. No public "
-            "sequence located. A DTU application on alpha-neurotoxin "
-            "neutralisation exists (WO2023209212A1) but this clone was not "
-            "confirmed within it during the M4 survey."
+            "Derived from 368_01_C05 by light-chain shuffling. The variable "
+            "regions are disclosed in the DTU application WO2023209212A1, "
+            "which names the clone 89 times, but the sequences have not been "
+            "transcribed for this repository and the licence position is "
+            "unresolved."
         ),
     ),
     Candidate(
@@ -467,8 +515,8 @@ CANDIDATES: tuple[Candidate, ...] = (
         toxin_target="alpha-cobratoxin",
         antibody_id="368_01_C05",
         molecule_format="scFv",
-        sequence_source=("none",),
-        patent_status="not-assessed",
+        sequence_source=("patent:WO2023209212A1",),
+        patent_status="application-pending",
         tested_against="in vitro neutralisation of alpha-cobratoxin",
         evidence_level="L2",
         mrna_suitability="unknown",
@@ -476,7 +524,8 @@ CANDIDATES: tuple[Candidate, ...] = (
         notes=(
             "The parental clone of the affinity-maturation campaign. It did "
             "not neutralise alpha-bungarotoxin, which is the reason its "
-            "light chain was shuffled."
+            "light chain was shuffled. Named in the DTU application "
+            "WO2023209212A1."
         ),
     ),
     Candidate(
@@ -485,15 +534,17 @@ CANDIDATES: tuple[Candidate, ...] = (
         toxin_target="alpha-cobratoxin",
         antibody_id="TPL1158_01_C09",
         molecule_format="VHH",
-        sequence_source=("PDB:9GCN",),
-        patent_status="not-assessed",
+        sequence_source=("PDB:9GCN", "patent:WO2025078529A1"),
+        patent_status="application-pending",
         tested_against="in vitro binding, by co-crystal structure",
         evidence_level="L2",
         mrna_suitability="ready",
         citation="RCSB9GCN",
         notes=(
             "The only single-domain candidate for an Indian cobra toxin whose "
-            "sequence is directly available from a structural deposit."
+            "sequence is directly available from a structural deposit. The DTU "
+            "application WO2025078529A1 names the clone 71 times, so the "
+            "sequence being public does not make the candidate free to build."
         ),
     ),
     Candidate(
@@ -502,8 +553,8 @@ CANDIDATES: tuple[Candidate, ...] = (
         toxin_target="alpha-cobratoxin",
         antibody_id="A01",
         molecule_format="mAb-IgG",
-        sequence_source=("PDB:9HUO", "PDB:9FYT", "PDB:9HXO"),
-        patent_status="not-assessed",
+        sequence_source=("PDB:9HUO", "PDB:9FYT", "PDB:9HXO", "patent:WO2023209212A1"),
+        patent_status="application-pending",
         tested_against=(
             "in vitro receptor-blocking at pH 4.5, 5.5 and 6.0"
         ),
@@ -513,7 +564,7 @@ CANDIDATES: tuple[Candidate, ...] = (
         notes=(
             "Selected for pH-dependent binding, which is the point of the "
             "study: venom is acidic at the bite site and near neutral in the "
-            "blood."
+            "blood. Named in the DTU application WO2023209212A1."
         ),
     ),
     Candidate(

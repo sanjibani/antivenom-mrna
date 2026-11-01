@@ -301,6 +301,142 @@ def write_reference_protein() -> Path:
     return target
 
 
+def split_rcsb_records(records: list[tuple[str, str]]) -> list[tuple[str, str, str]]:
+    """Split an RCSB FASTA download into its polymer entities.
+
+    The download gives one record per polymer entity, with a header of the
+    form::
+
+        >9GCN_1|Chains A, F[auth B]|Protein. Variable Domain of ...|Vicugna pacos
+
+    The fields are the entity identifier, the chains, the description of the
+    polymer and the source organism, in that order. The part before the
+    first pipe is the entity identifier, so the records can be addressed by
+    entity rather than by chain.
+
+    Args:
+        records: The records as returned by :func:`mrna.fasta.read_fasta`.
+
+    Returns:
+        A list of ``(entity_id, description, sequence)`` triples.
+
+    Raises:
+        ValueError: If a header does not carry an entity identifier.
+    """
+    entities: list[tuple[str, str, str]] = []
+    for header, sequence in records:
+        fields = header.split("|")
+        entity_id = fields[0].strip()
+        if "_" not in entity_id:
+            msg = f"RCSB record header {header!r} does not carry an entity identifier"
+            raise ValueError(msg)
+        description = fields[2].strip() if len(fields) > 2 else ""
+        entities.append((entity_id, description, sequence))
+    return entities
+
+
+def write_tpl1158_vhh() -> Path:
+    """Extract the TPL1158_01_C09 nanobody from the PDB entry.
+
+    This is the only single-domain candidate in the M4 table whose variable
+    region can be located in a public database, and it is the payload that
+    makes a second cocktail member constructible without engineering.
+
+    Args:
+        None.
+
+    Returns:
+        The path of the written file.
+
+    Raises:
+        ValueError: If the downloaded entry does not hold the expected
+            entity.
+    """
+    records = read_fasta(RAW / "rcsb_9GCN_vhh_tpl1158_01_c09.fasta")
+    entities = split_rcsb_records(records)
+    vhh = next(
+        (seq for entity, description, seq in entities if "Heavy-Chain only" in description),
+        None,
+    )
+    if vhh is None:
+        msg = "rcsb_9GCN_vhh_tpl1158_01_c09.fasta holds no VHH entity"
+        raise ValueError(msg)
+    header = (
+        "TPL1158_01_C09 nanobody, anti-Naja kaouthia alpha-cobratoxin | "
+        "source: PDB entry 9GCN, entity 1, a co-crystal with alpha-cobratoxin "
+        "from Naja kaouthia | released 2025-08-06 | length "
+        f"{len(vhh)} aa"
+    )
+    target = OUT / "tpl1158_01_c09_vhh.fasta"
+    write_fasta(target, [(header, vhh)])
+    return target
+
+
+#: The PDB entries whose antibody chains are recorded for the M5 cocktail
+#: plan, with the entities that hold the antibody rather than the toxin.
+CANDIDATE_ANTIBODY_ENTITIES: tuple[tuple[str, str, tuple[int, ...]], ...] = (
+    (
+        "rcsb_8DA1_centi_lnx_d09.fasta",
+        "Centi-LNX-D09 Fab, anti-long-neurotoxin, from PDB entry 8DA1",
+        (1, 2),
+    ),
+    (
+        "rcsb_8V13_centi_snx_b03.fasta",
+        "Centi-SNX-B03 Fab, anti-short-neurotoxin, from PDB entry 8V13",
+        (1, 2),
+    ),
+    (
+        "rcsb_9CLP_h11_fab.fasta",
+        "H11 Fab, anti-ecarin, from PDB entry 9CLP",
+        (3, 4),
+    ),
+    (
+        "rcsb_9HUO_a01.fasta",
+        "A01 monoclonal antibody, anti-alpha-cobratoxin, from PDB entry 9HUO",
+        (2, 3),
+    ),
+)
+
+
+def write_candidate_fab_chains() -> Path:
+    """Record the antibody chains of the multi-chain candidates.
+
+    These candidates cannot be transcribed as one polypeptide, so their
+    chains are kept here so that the cost of converting them is a number
+    rather than an adjective.
+
+    Args:
+        None.
+
+    Returns:
+        The path of the written file.
+
+    Raises:
+        ValueError: If a downloaded entry does not hold the expected
+            entities.
+    """
+    records: list[tuple[str, str]] = []
+    for filename, label, entity_numbers in CANDIDATE_ANTIBODY_ENTITIES:
+        entities = split_rcsb_records(read_fasta(RAW / filename))
+        by_number = {
+            int(entity.rsplit("_", 1)[1]): (entity, desc, seq)
+            for entity, desc, seq in entities
+        }
+        for number in entity_numbers:
+            if number not in by_number:
+                msg = f"{filename} holds no entity {number}"
+                raise ValueError(msg)
+            entity, description, sequence = by_number[number]
+            header = (
+                f"{label} | entity {entity} | {description} | length {len(sequence)} aa"
+            )
+            records.append((header, sequence))
+    target = OUT / "candidate_fab_chains.fasta"
+    write_fasta(target, records)
+    return target
+
+
+
 def write_bnt162b2_mrna(sequence: str) -> Path:
     """Write the full Comirnaty mRNA sequence taken from the WHO document.
 
@@ -340,6 +476,8 @@ def main() -> None:
         write_e113_payload(),
         write_ecarpholin_s(),
         write_albumin(),
+        write_tpl1158_vhh(),
+        write_candidate_fab_chains(),
     ):
         print(f"wrote {path.relative_to(ROOT)}")
 

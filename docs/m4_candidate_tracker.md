@@ -24,10 +24,10 @@ Two things are deliberately kept apart here. The first is whether a candidate wo
 | Naja naja | unspecified | not resolved in the public record | N248 | scFv | none | not-assessed | in vitro binding and in vivo venom inhibition against Naja naja venom | L4 | unknown |
 | Naja naja | 3FTx-L | long neurotoxin | Centi-LNX-D09 | mAb-IgG | PDB:8DA1; PDB:8D9Z; PDB:8DA0; PDB:8D9Y; patent:US20240294618A1 | application-pending | in vivo whole-venom challenge across 19 elapid species, plus recombinant long neurotoxins from cobra, krait, taipan and mamba | L4 | adaptable |
 | Naja naja | 3FTx-S | short neurotoxin | Centi-SNX-B03 | mAb-IgG | PDB:8V13; patent:US20240294618A1 | application-pending | in vivo whole-venom challenge | L4 | adaptable |
-| Naja kaouthia | 3FTx-L | alpha-cobratoxin | 2554_01_D11 | mAb-IgG | none | not-assessed | in vitro patch-clamp neutralisation, and in vivo protection against Naja kaouthia whole venom | L4 | unknown |
-| Naja kaouthia | 3FTx-L | alpha-cobratoxin | 368_01_C05 | scFv | none | not-assessed | in vitro neutralisation of alpha-cobratoxin | L2 | unknown |
-| Naja kaouthia | 3FTx-L | alpha-cobratoxin | TPL1158_01_C09 | VHH | PDB:9GCN | not-assessed | in vitro binding, by co-crystal structure | L2 | ready |
-| Naja kaouthia | 3FTx-L | alpha-cobratoxin | A01 | mAb-IgG | PDB:9HUO; PDB:9FYT; PDB:9HXO | not-assessed | in vitro receptor-blocking at pH 4.5, 5.5 and 6.0 | L2 | adaptable |
+| Naja kaouthia | 3FTx-L | alpha-cobratoxin | 2554_01_D11 | mAb-IgG | patent:WO2023209212A1 | application-pending | in vitro patch-clamp neutralisation, and in vivo protection against Naja kaouthia whole venom | L4 | unknown |
+| Naja kaouthia | 3FTx-L | alpha-cobratoxin | 368_01_C05 | scFv | patent:WO2023209212A1 | application-pending | in vitro neutralisation of alpha-cobratoxin | L2 | unknown |
+| Naja kaouthia | 3FTx-L | alpha-cobratoxin | TPL1158_01_C09 | VHH | PDB:9GCN; patent:WO2025078529A1 | application-pending | in vitro binding, by co-crystal structure | L2 | ready |
+| Naja kaouthia | 3FTx-L | alpha-cobratoxin | A01 | mAb-IgG | PDB:9HUO; PDB:9FYT; PDB:9HXO; patent:WO2023209212A1 | application-pending | in vitro receptor-blocking at pH 4.5, 5.5 and 6.0 | L2 | adaptable |
 | Naja kaouthia | 3FTx-L | alpha-cobratoxin | C2, C21 | VHH | none | not-assessed | in vitro and in vivo neutralisation of alpha-cobratoxin in mice | L4 | unknown |
 | Naja kaouthia | 3FTx-L | alpha-neurotoxin | TPL0629_01_D11 | VHH | none | not-assessed | in vitro neutralisation and in vivo protection | L4 | unknown |
 | Naja kaouthia | PLA2 | phospholipase A2 | TPL0637_01_A07 | VHH | none | not-assessed | in vitro neutralisation and in vivo protection | L4 | unknown |

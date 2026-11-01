@@ -1,0 +1,13 @@
+member	element	start	end	length	description
+TPL1158_01_C09	cap	1	2	2	A modified 5'-cap1 structure (m7G+m3'-5'-ppp-5'-Am). The two nucleotides printed for the cap are the 7-methylguanosine at position 1 and the first backbone nucleotide at position 2, joined by a 5'-to-5' triphosphate.
+TPL1158_01_C09	5'-UTR	3	54	52	5'-untranslated region derived from human alpha-globin RNA with an optimized Kozak sequence. As used in BNT162b2.
+TPL1158_01_C09	sig	55	108	54	Human serum albumin signal peptide, which directs the nascent polypeptide into the endoplasmic reticulum for secretion.
+TPL1158_01_C09	TPL1158_01_C09 payload	109	480	372	Codon-optimised VHH TPL1158_01_C09 against alpha-cobratoxin, preceded by the human serum albumin signal peptide, followed by a stop codon at 478 to 480.
+TPL1158_01_C09	3'-UTR	481	775	295	A 3' untranslated region comprising two sequence elements derived from the amino-terminal enhancer of split (AES) mRNA and the mitochondrial encoded 12S ribosomal RNA, to confer RNA stability and high total protein expression. As used in BNT162b2.
+TPL1158_01_C09	poly(A)	776	885	110	A 110-nucleotide poly(A)-tail consisting of a stretch of 30 adenosine residues, followed by a 10-nucleotide linker sequence and another 70 adenosine residues.
+E113	cap	1	2	2	A modified 5'-cap1 structure (m7G+m3'-5'-ppp-5'-Am). The two nucleotides printed for the cap are the 7-methylguanosine at position 1 and the first backbone nucleotide at position 2, joined by a 5'-to-5' triphosphate.
+E113	5'-UTR	3	54	52	5'-untranslated region derived from human alpha-globin RNA with an optimized Kozak sequence. As used in BNT162b2.
+E113	sig	55	108	54	Human serum albumin signal peptide, which directs the nascent polypeptide into the endoplasmic reticulum for secretion.
+E113	E113 payload	109	828	720	Codon-optimised scFv E113 against ecarpholin S, the Ser49 myotoxic phospholipase A2, preceded by the human serum albumin signal peptide, followed by a stop codon at 826 to 828.
+E113	3'-UTR	829	1123	295	A 3' untranslated region comprising two sequence elements derived from the amino-terminal enhancer of split (AES) mRNA and the mitochondrial encoded 12S ribosomal RNA, to confer RNA stability and high total protein expression. As used in BNT162b2.
+E113	poly(A)	1124	1233	110	A 110-nucleotide poly(A)-tail consisting of a stretch of 30 adenosine residues, followed by a 10-nucleotide linker sequence and another 70 adenosine residues.
