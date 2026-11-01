@@ -170,3 +170,34 @@ docs/m1_codon_optimizer.md   the design report, generated so it cannot drift
 > cent of positions.
 > Same protein, different words.
 > In-silico designs. No therapeutic efficacy demonstrated. Not medical advice.
+
+## Amendments after implementation (2026-11-01)
+
+Three things changed while building this, and the reasons are worth
+recording, because the plan was wrong in ways that only showed up against
+real data.
+
+1. **The GC band moved from 0.50 to 0.60 to 0.40 to 0.70.** The plan assumed
+   the literature band. Measured against the two approved products, Comirnaty's
+   30-nucleotide blocks span 0.400 to 0.700 and Spikevax's span 0.467 to
+   0.767, so the literature band would have excluded Spikevax outright. The
+   enforced band is now the band both approved products satisfy, and the
+   narrower figure stays in `params.py` as a documented target rather than a
+   constraint.
+2. **Upstream AUG avoidance moved out of the coding-sequence optimiser.** It
+   is a 5' UTR constraint, because an internal AUG in a coding region is just
+   a methionine. It belongs to the UTR library in M2, where it can be checked
+   against the actual Kozak context.
+3. **The motif list shrank to what could be cited.** The AAUAAA polyadenylation
+   signal is enforced, with Proudfoot and Brownlee 1976 and Fitzgerald and
+   Shenk 1981 behind it. The homopolymer limit and the poly-lysine limit are
+   enforced as engineering defaults, because neither approved product comes
+   close to either. The cloning sites remain unverified candidates, because
+   which restriction sites matter depends on the DNA template a manufacturing
+   partner will use, and this project does not know that yet.
+
+One finding that changed the framing of the milestone: choosing the most
+favoured codon everywhere already gives a CAI of 1.0000, so maximising the CAI
+on its own is trivial. The design problem is the constraints. The optimiser
+earns its place by holding the GC band and removing motifs, not by raising
+the CAI, and that is what the report now measures.

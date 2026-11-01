@@ -330,8 +330,13 @@ def codon_adaptation_index(cds: str, usage_table: Mapping[str, float]) -> float:
 
     weights = relative_adaptiveness(usage_table)
     codons = [cleaned[i : i + 3] for i in range(0, len(cleaned), 3)]
-    sense_codons = codons[1:] if codons and codons[0] == "ATG" else codons
-    sense_codons = [codon for codon in sense_codons if codon not in STOP_CODONS]
+    sense_codons = [codon for codon in codons if codon not in STOP_CODONS]
+    # The initiator ATG is excluded from the CAI, because its weight is
+    # always 1.0 and including it would bias every sequence the same way.
+    # A sequence that is nothing but methionine keeps its initiator, since
+    # otherwise there would be nothing left to score.
+    if len(sense_codons) > 1 and sense_codons[0] == "ATG":
+        sense_codons = sense_codons[1:]
     if not sense_codons:
         msg = "codon_adaptation_index() found no sense codons to score"
         raise ValueError(msg)

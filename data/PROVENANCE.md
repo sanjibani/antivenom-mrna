@@ -18,6 +18,7 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `berthubert_side-by-side.csv` | Codon-by-codon comparison of the viral and vaccine sequences | <https://github.com/berthubert/bnt162b2> | as above |
 | `naalytics_figure1figure2_032321.fasta` | Read-derived assemblies of the BNT162b2 and mRNA-1273 mRNAs, sequenced from the commercial products | <https://github.com/NAalytics/Assemblies-of-putative-SARS-CoV2-spike-encoding-mRNA-sequences-for-vaccines-BNT-162b2-and-mRNA-1273> | Paper: "Assemblies of putative SARS-CoV-2 spike-encoding mRNA sequences for vaccines BNT162b2 and mRNA-1273", 2021 |
 | `uniprot_P0DTC2_spike.fasta` | SARS-CoV-2 spike glycoprotein, the authoritative reference protein | <https://rest.uniprot.org/uniprotkb/P0DTC2.fasta> | UniProt, CC-BY 4.0 |
+| `uniprot_P42212_gfp.fasta` | Green fluorescent protein from Aequorea victoria, the teaching example for M1 | <https://rest.uniprot.org/uniprotkb/P42212.fasta> | UniProt, CC-BY 4.0 |
 | `kazusa_homo_sapiens_2020.txt` | Homo sapiens codon usage table, 93,487 coding sequences | <https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=9606&aa=1&style=N> | Kazusa Codon Usage Database, Nakamura et al. 2000 |
 | `biontech_bnt162b2_primary.doc` | An earlier attempt to fetch the WHO document from the INN programme host; it now returns an HTML page rather than the document. Kept only to record the attempt | <https://mednet-communities.net/inn/db/media/docs/11889.doc> | not used |
 
@@ -28,6 +29,7 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `bnt162b2_mrna_who.fasta` | `scripts/prepare_reference_data.py` | The full 4,284-nt Comirnaty mRNA, parsed from the WHO document, with N1-methylpseudouridine written as T |
 | `bnt162b2_cds.fasta` | `scripts/prepare_reference_data.py` | The 3,822-nt Comirnaty coding sequence, from the transcription in `berthubert_vaccine-s.fasta` |
 | `sars_cov2_spike_P0DTC2.fasta` | `scripts/prepare_reference_data.py` | The UniProt reference protein, header preserved |
+| `gfp_P42212.fasta` | `scripts/prepare_reference_data.py` | The UniProt GFP reference protein, header preserved |
 | `homo_sapiens_codon_usage_kazusa.tsv` | `scripts/prepare_reference_data.py` | The Kazusa table, parsed into a tab-separated file with its citation in the header |
 
 ## Checksums

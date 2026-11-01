@@ -169,6 +169,18 @@ def write_bnt162b2_cds() -> Path:
     return target
 
 
+def write_reference_gfp() -> Path:
+    """Normalise the downloaded UniProt GFP record."""
+    records = read_fasta(RAW / "uniprot_P42212_gfp.fasta")
+    if not records:
+        msg = "uniprot_P42212_gfp.fasta contains no records"
+        raise ValueError(msg)
+    header, sequence = records[0]
+    target = OUT / "gfp_P42212.fasta"
+    write_fasta(target, [(header, sequence)])
+    return target
+
+
 def write_reference_protein() -> Path:
     """Normalise the downloaded UniProt SARS-CoV-2 spike record."""
     records = read_fasta(RAW / "uniprot_P0DTC2_spike.fasta")
@@ -213,7 +225,7 @@ def main() -> None:
     mrna_path = write_bnt162b2_mrna(who_sequence)
     print(f"wrote {mrna_path.relative_to(ROOT)}")
 
-    for path in (write_bnt162b2_cds(), write_reference_protein()):
+    for path in (write_bnt162b2_cds(), write_reference_protein(), write_reference_gfp()):
         print(f"wrote {path.relative_to(ROOT)}")
 
     print("\nsha256 of raw downloads:")
