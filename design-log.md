@@ -8,6 +8,47 @@ that justifies them. The `Owner's note` lines are left for the project owner:
 the biological reasoning behind a decision is the learning footprint of this
 project and is written by a human, not by the tool that implements it.
 
+## Writing an owner's note
+
+Every entry in this log ends with an `Owner's note` line, and every one of
+those lines is still empty. They are empty on purpose, and they stay empty
+until the project owner fills them in.
+
+The reason is specific. The `Why` section above each entry is the reasoning
+of the thing that implemented the decision: why a block dynamic program beats
+a greedy pass, why a rebuild is a better test than a self-consistency check.
+That reasoning belongs to a machine and it is already recorded. The `Owner's
+note` is the part nobody else can write, which is what the decision assumes
+about the biology and what would follow if the assumption turned out to be
+wrong. A note written by the implementer would be a second summary of the
+implementer's own work, and would teach the owner nothing.
+
+A note is short. Three questions, answered in a few sentences each:
+
+1. **What does this decision assume about the biology?**
+2. **What would break if that assumption is wrong?**
+3. **What would you do differently if you knew more?**
+
+The template, to be copied for any entry:
+
+> **Assumption.** ...
+>
+> **If wrong.** ...
+>
+> **With more information.** ...
+
+To fill one in, replace the line
+
+```
+**Owner's note.** _to be written by the project owner_
+```
+
+in the relevant entry with your note under the heading. The note does not need
+to be a biology essay, and it does not need to agree with the `Why` section.
+If the reasoning disagrees with the implementation, that disagreement is the
+most valuable sentence in this log, and it belongs in the log before it
+belongs in a commit.
+
 ---
 
 ## M0: reading a licensed vaccine backwards
