@@ -35,8 +35,10 @@ from mrna.candidates import (
     MRNA_SUITABILITY,
     PATENT_STATUS,
     POLYCLONAL_FORMATS,
+    REFRESH_NOTES,
     SINGLE_ORF_FORMATS,
     SPECIES_TOXIN_FAMILIES,
+    SURVEY_DATES,
     TOXIN_FAMILIES,
     TOXIN_FAMILY_NOTES,
     Candidate,
@@ -59,7 +61,16 @@ __all__ = [
 COVERAGE_THRESHOLD = "L2"
 
 #: The kinds of sequence source the table understands.
-SEQUENCE_SOURCE_KINDS = ("PDB", "patent")
+#:
+#: ``PDB`` and ``patent`` carry a value, the entry identifier. ``paper``
+#: carries a value too, and the value must name the supplement precisely
+#: enough to be opened: a sequence in a paper's supplementary data counts as
+#: located only when the supplement has been downloaded and read during the
+#: survey or a refresh, and the refresh record in
+#: :data:`mrna.candidates.REFRESH_NOTES` is where that verification is
+#: written down. The bare ``paper`` token, with no value, is retained for
+#: backward compatibility and should not be used by new rows.
+SEQUENCE_SOURCE_KINDS = ("PDB", "patent", "paper")
 
 #: The tokens that need no value after the colon.
 SEQUENCE_SOURCE_BARE = ("paper", "none")
@@ -477,6 +488,22 @@ class CandidateTracker:
             out.append(f"- {finding}")
         out.append("")
 
+        if REFRESH_NOTES:
+            latest = SURVEY_DATES[-1]
+            out.append(f"## The refresh record, {latest}")
+            out.append("")
+            out.append(
+                f"The table was built on {SURVEY_DATES[0]} and re-checked on "
+                f"{latest}. Each item below is a source the refresh "
+                "examined, and what became of it. A negative result is "
+                "written down so the next refresh inherits the search "
+                "rather than repeating it.",
+            )
+            out.append("")
+            for date, source, outcome in REFRESH_NOTES:
+                out.append(f"- **{source}** ({date}): {outcome.rstrip('.')}.")
+            out.append("")
+
         out.append("## The table")
         out.append("")
         out.append(
@@ -646,8 +673,9 @@ class CandidateTracker:
         out.append("")
         out.append(
             "- **It is a survey, not an exhaustive census.** A row saying "
-            "`none` for a sequence means the sequence was not located during "
-            "the survey on 2026-11-01, not that no sequence exists.",
+            "`none` for a sequence means the sequence was not located as of "
+            f"the latest refresh on {SURVEY_DATES[-1]}, not that no sequence "
+            "exists.",
         )
         out.append(
             "- **Patent status is a fact about filings, not a clearance.** A "

@@ -38,7 +38,7 @@ The attrition down that table is the finding. Four tiers, and the number of cell
 | Naja kaouthia | 3FTx-S | no | no | no | no |
 | Naja kaouthia | PLA2 | yes | no | no | no |
 
-The Big Four species are in bold. The `licence-unblocked` column is a floor rather than a clearance: a row reaches it only when a public patent search was actually performed and found nothing. Of the 22 rows in the M4 table, 9 have had a search performed at all, and 2 of those came back with nothing: E113, E10.
+The Big Four species are in bold. The `licence-unblocked` column is a floor rather than a clearance: a row reaches it only when a public patent search was actually performed and found nothing. Of the 23 rows in the M4 table, 9 have had a search performed at all, and 2 of those came back with nothing: E113, E10.
 
 ### What each tier drops
 
@@ -50,7 +50,7 @@ The Big Four species are in bold. The `licence-unblocked` column is a floor rath
 
 **`licence-unblocked`**: E113.
 
-Read down the list of payloads and the order is the story. The published record has candidates for most of the matrix. The public sequence databases do not. The transcripts that can be built from what is public are 2.
+Read down the list of payloads and the order is the story. The published record has candidates for most of the matrix. The public sequence databases do not. The payloads a transcript can carry from what is public number 3, and a minimal cover of the tier's cells needs 2 of them.
 
 ## 3. The cells that no tier covers
 
@@ -72,9 +72,9 @@ The other 2 are elapid cells: Bungarus caeruleus / PLA2, Naja kaouthia / 3FTx-S.
 
 - **KSPI**: the anticoagulant fraction of viper venom; an antibody against it would make the coagulopathy worse rather than better.
 
-## 4. The 2 constructs that can be built
+## 4. The 2 constructs of the minimal cover
 
-At the `single-polypeptide` tier there are 2 payloads, and every one of them can be transcribed from a published sequence as it stands, with no engineering step in between. The others are Fab fragments or two-chain antibodies: converting them into one transcript needs a single-chain format that does not exist in the published data, which means the neutralisation data would no longer belong to the molecule being transcribed.
+At the `single-polypeptide` tier there are 3 payloads a transcript can carry as they stand, each with a public sequence and a one-polypeptide format, and no engineering step in between. A minimal cover of the tier's cells needs 2 of them, because payloads that cover the same cell stand in for one another, and the constructs below are that cover. The payloads the tier drops below it are Fab fragments or two-chain antibodies: converting them into one transcript needs a single-chain format that does not exist in the published data, which means the neutralisation data would no longer belong to the molecule being transcribed.
 
 ### TPL1158_01_C09
 
@@ -132,7 +132,7 @@ At the `single-polypeptide` tier there are 2 payloads, and every one of them can
 
 ## 5. The licence position, which is the real blocker
 
-These 2 payloads are the only ones that can be transcribed, and a public patent search finds an application covering 1 of them.
+The cover above holds 2 payloads, and a public patent search finds an application covering 1 of them.
 
 - **TPL1158_01_C09** is named 71 times in WO2025078529A1, *Nanobodies capable of cross-binding to several different elapid three-finger toxins*, published by Danmarks Tekniske Universitet.
 - **E113** is the clone this repository already built in M3, and no application covering it was located.
