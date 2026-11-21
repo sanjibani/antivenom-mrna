@@ -148,6 +148,24 @@ PAYLOAD_SPECS: tuple[PayloadSpec, ...] = (
         ),
     ),
     PayloadSpec(
+        name="D2",
+        reference="d2_vhh.fasta",
+        chain_labels=("VHH",),
+        selectors=(),
+        molecule_format="VHH",
+        species=("Naja kaouthia",),
+        toxin_family="3FTx-L",
+        toxin_target="alpha-cobratoxin",
+        citation=(
+            "bioRxiv 2026.09.01.748349, supplementary data 1, sheet "
+            "All_designs, well D2 (a_cobratoxin_nb_s176138_abmpnn_2): a de "
+            "novo designed single-domain antibody against alpha-cobratoxin "
+            "of Naja kaouthia, with in vivo rescue of challenged mice. "
+            "Overath MD, Lundquist EVS, Bjornsson KH, et al. 2026. A "
+            "preprint, not peer reviewed."
+        ),
+    ),
+    PayloadSpec(
         name="Centi-LNX-D09",
         reference="candidate_fab_chains.fasta",
         chain_labels=("light", "heavy"),
