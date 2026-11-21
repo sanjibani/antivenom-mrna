@@ -901,20 +901,65 @@ column in `src/mrna/candidates.py`.
 
 ---
 
+## M6: two payloads, one transcript
+
+### 2026-11-21, a structure that carries the element is a source for the element
+
+**Decision.** The P2A ribosome-skipping peptide is sourced from two
+deposited constructs that carry it, PDB entries 31FW and 8E99, rather than
+typed from the characterisation paper, and the test suite extracts the
+peptide from both raw files and checks the two agree with the engine's
+constant.
+
+**Why.** M5 refused the 2A route because the sequence could not be sourced
+to the standard: publishers blocked, PDFs came back empty, and the
+tempting fallback was typing a famous 19-mer from memory. What nobody had
+tried was asking where the peptide physically is. Expression constructs
+put it in crystallised, deposited molecules, and a sequence search over
+the structural database finds 51 of them. Two from different groups,
+agreeing residue for residue, meet the same two-source bar the WHO
+document and the community assembly met in M0.
+
+**Consequence.** `src/mrna/p2a.py` holds the element with its sources;
+both raw entries are committed with checksums; and the first construct
+built on it carries two payloads on one transcript, 1,722 nt, with the
+mature downstream product checked by translation against the published
+E113 sequence, residue for residue.
+
+**Sources.** PDB entries 31FW and 8E99; Kim JH, Lee SR, Li LH, et al.
+2011, PLoS ONE 6(4):e18556; `scripts/cocktail_transcript.py`.
+
+**Owner's note.**
+
+> **Assumption.** A peptide that appears in two deposited expression
+> constructs is the peptide the characterisation papers describe, and the
+> ribosome treats it the same way inside a message this repository
+> designs.
+>
+> **If wrong.** Skip efficiency is context-dependent, and the two
+> deposited constructs are cryo-EM expression tools rather than
+> therapeutic messages; a scarred nanobody or an incompletely skipped
+> transcript would produce molecules nobody has measured. The report says
+> the project cannot measure the ratio for exactly that reason.
+>
+> **With more information.** Any published 2A-linked antibody pair with
+> product-level quantification, in the venom literature or outside it,
+> would let the report carry a number instead of a caveat.
+
+---
+
 ## Next
 
-The open item for milestone M6 is no longer a design problem, and that is the
-finding M5 arrived at. The tracker has named the three things that would move
-the plan: a candidate against common krait phospholipase A2, where no
-published candidate exists and the toxin is about two thirds of that venom by
-mass; the metalloproteinases of Indian Russell's viper, where the one
-recombinant candidate has no publicly locatable sequence; and a conversation
-with the two institutions whose published applications cover the sequences
-that do exist.
-
-On the engineering side, M6 has one outstanding design question: whether
-several payloads can share one transcript, which needs a sourced 2A peptide or
-an internal ribosome entry site. Regional venom variants and a design
-iteration against the payload that already exists are the other two strands.
+The next milestone turns to the regional-variant strand: the venom
+variation inside one species, mapped for the Indian spectacled cobra by
+Laxme and colleagues in 2021, treated as a design input rather than a
+footnote. The tracker names the two gaps a variant would fill if a
+sequence ever lands: common krait phospholipase A2, where no published
+candidate exists and the toxin is about two thirds of that venom by mass;
+and the metalloproteinases of Indian Russell's viper, where the one
+recombinant candidate has no publicly locatable sequence. A conversation
+with the two institutions whose published applications cover the
+sequences that do exist remains the third strand, and it is not a design
+problem.
 
 
