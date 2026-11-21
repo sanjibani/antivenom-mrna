@@ -86,7 +86,40 @@ post, and a validation signal, so that there are no silent stretches.
 | M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
 | M5 | The Big Four cocktail, planned from the literature map and built where it can be | First design that names its own blockers | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
-| M6+ | Regional variants, partner outreach, design iteration | Sustained cadence | Not started |
+| M6 | Two payloads on one transcript, the 2A element sourced at last, the candidate table refreshed | The milestone that closes M5's open question | Done, see [the M6 report](docs/m6_single_transcript.md) |
+| M7 | Regional venom variation weighted into the coverage question | The matrix learns what a state's venom weighs | Done, see [the M7 report](docs/m7_regional_variants.md) |
+| M8+ | Design iteration, matrix widening (SVSP, snaclec), partner outreach | Sustained cadence | Not started |
+
+## What M7 established
+
+Regional venom variation, weighted into the coverage question.
+
+M7 takes the two Sunagar-group surveys of 2021, which print regional venom
+composition for the spectacled cobra and for Russell's viper, and asks the
+question a species-level matrix cannot ask: for each surveyed population,
+what does the plan cover *in the venom a patient in that state carries*?
+
+- **The cobra species reads as covered, and the populations are not.** All
+  three cobra cells have candidates at the published tier, but the
+  neurotoxin cells are held by two-chain Fabs and the phospholipase A2
+  cell by an scFv with no locatable sequence, so the whole species goes
+  uncovered at the tier where a transcript can carry it. In Punjab that
+  drop is about 80 per cent of the venom mass; in Rajasthan, about 62
+  per cent, in the one venom the commercial antivenom fails completely at
+  five times the lethal dose.
+- **The viper's biggest actionable fraction now has a mass attached.**
+  Phospholipase A2 is 59 per cent of the Western Ghats viper venom, 45
+  per cent of the Deccan Plateau's, 35 per cent of the Gangetic Plain's,
+  and its one recombinant candidate has no publicly locatable sequence.
+- **The viper matrix under-models the venom, and says so.** Snake venom
+  serine proteases and C-type lectins, up to 27 and 20 per cent of the
+  mapped populations' venom, have no column in the gap matrix. Widening
+  the matrix is a decision for the next milestone; this report records
+  the need rather than silently changing the published artifacts.
+- **Only printed fractions enter.** Three populations per species have
+  mass spectrometry; the rest were characterised by chromatography alone,
+  and no composition is recorded for them, because a fraction nobody
+  printed is not a fraction anybody can check.
 
 ## What M5 established
 
