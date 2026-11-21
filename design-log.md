@@ -901,6 +901,60 @@ column in `src/mrna/candidates.py`.
 
 ---
 
+## M7: regional venom variation as a design input
+
+### 2026-11-21, a species is not one venom, and the matrix has to say so
+
+**Decision.** The printed regional composition data of the two Sunagar-group
+surveys of 2021 enters the engine as a module of its own, and the analysis
+it supports is a weighting, not a new matrix: for each surveyed population,
+how much of the venom's mass falls in matrix cells the plan can and cannot
+cover, at every tier, and which of the remainder the matrix does not even
+model.
+
+**Why.** The species-level matrix treats a species' venom as one thing, and
+the clinical record says otherwise: the commercial antivenom fails against
+the Rajasthan cobra completely at five times the lethal dose, and the
+surveys print the composition differences that explain it. The honest way
+to bring regional variation in is to weight the existing matrix by venom
+mass rather than widen it, because widening it would silently change the
+published M4 and M5 artifacts underneath their readers.
+
+**Consequence.** Six populations, three per species, with only the mass
+fractions the surveys print. The cobra survey's neurotoxic fraction maps
+onto 3FTx-L and its cytotoxic fraction onto 3FTx-S, an approximation the
+report names; the viper survey's serine protease and C-type lectin
+fractions have no matrix family and stay unmapped, which turns the
+under-modelling itself into a recorded finding. The verdicts are computed
+from the planner at all four tiers, and the tests pin them against the M4
+table rather than against prose.
+
+**Sources.** Senji Laxme RR, Attarde S, Khochare S, et al. 2021, PLoS Negl
+Trop Dis 15(2):e0009150; Senji Laxme RR, Khochare S, Attarde S, et al.
+2021, PLoS Negl Trop Dis 15(3):e0009247; `src/mrna/regional.py`,
+`scripts/regional_variants.py`.
+
+**Owner's note.**
+
+> **Assumption.** The neurotoxic fraction of a cobra venom behaves, for
+> coverage purposes, as one family anchored on the long-chain alpha-
+> neurotoxins the matrix calls 3FTx-L, and weighting cells by venom mass
+> is a fair picture of what a bite in a given state demands.
+>
+> **If wrong.** The survey's neurotoxic fraction includes short-chain
+> alpha-neurotoxins that the matrix files under no existing cell, so the
+> weight on 3FTx-L is partly weight on a family the matrix does not
+> separate. The report names the approximation; a reader who needs the
+> last ten per cent needs the surveys' supplementary tables, not this
+> report.
+>
+> **With more information.** A per-population breakdown of the
+> neurotoxic fraction into long- and short-chain would let the weighting
+> split across both 3FTx cells exactly, and the sarangi-style bioclimatic
+> modelling would extend the six printed populations to a map.
+
+---
+
 ## Next
 
 The open item for milestone M6 is no longer a design problem, and that is the
