@@ -75,18 +75,18 @@ footnote.
 
 ## Status
 
-Milestones are sequenced, not scheduled. Every one ships an artifact, a public
-post, and a validation signal, so that there are no silent stretches.
+Milestones are sequenced, not scheduled. Every one ships an artifact and a
+validation signal, so that there are no silent stretches.
 
-| Milestone | Artifact | Signal | Status |
-| --- | --- | --- | --- |
-| M0 | `vax_anatomy`: reverse-engineer the anatomy of a licensed mRNA vaccine | First public post; computed features match published values | Done, see [the M0 report](docs/m0_vax_anatomy.md) |
-| M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Second artifact, first repository views | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
-| M2 | Full-construct assembler, curated UTR library, secondary-structure checks | First tool someone else can use | Done, see [the M2 report](docs/m2_construct_assembler.md) |
-| M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
-| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
-| M5 | The Big Four cocktail, planned from the literature map and built where it can be | First design that names its own blockers | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
-| M6+ | Literature refresh, single transcript, regional variants, design iteration | Sustained cadence | In progress: the refresh has landed |
+| Milestone | Artifact | Status |
+| --- | --- | --- |
+| M0 | `vax_anatomy`: reverse-engineer the anatomy of a licensed mRNA vaccine | Done, see [the M0 report](docs/m0_vax_anatomy.md) |
+| M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
+| M2 | Full-construct assembler, curated UTR library, secondary-structure checks | Done, see [the M2 report](docs/m2_construct_assembler.md) |
+| M3 | One toxin, one published neutralising antibody, one full construct, one design document | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
+| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
+| M5 | The Big Four cocktail, planned from the literature map and built where it can be | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
+| M6+ | Literature refresh, single transcript, regional variants, design iteration | In progress: the refresh has landed |
 
 ## What M5 established
 
@@ -358,10 +358,12 @@ tests/                   pytest and hypothesis tests
   partners take it from L1 upward. The McLellan 2P construct is the precedent
   that a single published design can change the field without a single
   experiment run by its authors.
-- **The biological rationale is written by a human.** Code, tests and
+- **The biological rationale is owned by a human.** Code, tests and
   citations are machine-written. The reasoning about why a construct is
-  designed the way it is, in the pull request body, is written by the project
-  owner. That is the learning footprint, and it is the point.
+  designed the way it is, in the pull request body and in the `Owner's note`
+  entries of `design-log.md`, is drafted for the project owner, read by them,
+  and amended where their judgement differs. That is the learning footprint,
+  and it is the point.
 
 ## Contributing
 
@@ -374,8 +376,7 @@ can be checked.
 ## Citation
 
 If you use the designs or the engine, please cite this repository and say
-which version you used. A `CITATION.cff` file will be added once the designs
-land.
+which version you used. The preferred form is recorded in `CITATION.cff`.
 
 ## Licence
 
