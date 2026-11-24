@@ -86,7 +86,58 @@ validation signal, so that there are no silent stretches.
 | M3 | One toxin, one published neutralising antibody, one full construct, one design document | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
 | M5 | The Big Four cocktail, planned from the literature map and built where it can be | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
-| M6+ | Literature refresh, single transcript, regional variants, design iteration | In progress: the refresh has landed |
+| M6 | Two payloads on one transcript, the 2A element sourced at last, the candidate table refreshed | Done, see [the M6 report](docs/m6_single_transcript.md) |
+| M7+ | Regional variants, design iteration | Not started |
+
+| Milestone | Artifact | Signal | Status |
+| --- | --- | --- | --- |
+| M0 | `vax_anatomy`: reverse-engineer the anatomy of a licensed mRNA vaccine | First public post; computed features match published values | Done, see [the M0 report](docs/m0_vax_anatomy.md) |
+| M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Second artifact, first repository views | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
+| M2 | Full-construct assembler, curated UTR library, secondary-structure checks | First tool someone else can use | Done, see [the M2 report](docs/m2_construct_assembler.md) |
+| M3 | One toxin, one published neutralising antibody, one full construct, one design document | First attention from the venom research community | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
+| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
+| M5 | The Big Four cocktail, planned from the literature map and built where it can be | First design that names its own blockers | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
+| M6 | Two payloads on one transcript, the 2A element sourced at last, the candidate table refreshed | The milestone that closes M5's open question | Done, see [the M6 report](docs/m6_single_transcript.md) |
+| M7+ | Regional variants, design iteration | Sustained cadence | Not started |
+
+## What M6 established
+
+Two payloads on one transcript, and the element that makes it possible.
+
+M6 answers the design question M5 deferred: whether several payloads can
+share one transcript. The 2A peptide M5 could not source is sourced now
+under the repository's own rule, and the rule is what makes the answer
+worth having.
+
+- **The P2A peptide is the same molecule in two deposited constructs.** PDB
+  entry 31FW, entity 4, residues 51 to 69, and PDB entry 8E99, entity 2,
+  residues 4 to 22, deposited by different groups, carry the identical
+  19-residue porcine teschovirus-1 2A peptide, in both cases preceded by
+  the glycine-serine-glycine spacer the characterisation recommends. Both
+  raw entries are committed with checksums, and the test suite extracts the
+  peptide from each and checks it against the engine's constant.
+- **The skip is not a cleavage, and the cost is asymmetric.** The upstream
+  product keeps a 21-residue C-terminal scar the published TPL1158_01_C09
+  data does not describe; the downstream product starts with one proline
+  that a signal peptide follows, and signal peptidase removes both
+  together. The payload with the stronger published evidence goes
+  downstream: E113, at L4, is reproduced residue for residue, and the scar
+  goes on the nanobody whose data was binding-only at L2.
+- **The construct is 1,722 nt, one open reading frame of 420 residues.**
+  CAI 0.9882, coding-region GC 0.6381, no forbidden motif in any coding
+  element, both mature products checked by translation against the
+  published molecules, and the element table carries nine rows: cap, 5'
+  UTR, signal peptide, VHH, P2A, second signal peptide, scFv, 3' UTR,
+  poly(A).
+- **A third payload is committed and waits.** D2, the designed nanobody
+  from the refreshed M4 table, is reference data now; it does not join the
+  transcript because a three-payload design has two scars and two ratios
+  where this one has one, and the report states that rather than resolving
+  it.
+- **The licence position is unchanged and restated.** TPL1158_01_C09 is
+  named 71 times in WO2025078529A1; the transcript is a design artifact,
+  not a freedom-to-operate opinion.
+
 
 ## What M5 established
 
@@ -298,6 +349,7 @@ uv run python scripts/construct_assembler.py --write  # refresh docs/m2_construc
 uv run python scripts/venom_construct.py --write      # refresh docs/m3_ecarpholin_s_construct.md
 uv run python scripts/candidate_tracker.py --write    # refresh docs/m4_candidate_tracker.md
 uv run python scripts/cocktail_design.py --write     # refresh docs/m5_big_four_cocktail.md
+uv run python scripts/cocktail_transcript.py --write  # refresh docs/m6_single_transcript.md
 ```
 
 Optional tools are installed on demand rather than declared as extras, so that
@@ -322,12 +374,13 @@ src/mrna/assemble.py     the construct assembler and the regulatory-format eleme
 src/mrna/candidates.py   the curated candidate table for the Big Four, with its sources
 src/mrna/tracker.py      the tracker engine: validation, coverage and gap analysis
 src/mrna/payload.py      the antibody payloads a construct can carry, and their chains
+src/mrna/p2a.py          the P2A ribosome-skipping element, read from two deposited constructs
 src/mrna/cocktail.py     the cocktail planner: exact set cover over species and toxin families
 src/mrna/reference.py    loaders for the committed reference data
 src/mrna/fasta.py        minimal FASTA reader and writer
 scripts/                 prepare_reference_data.py, vax_anatomy.py, codon_optimizer.py,
                          construct_assembler.py, venom_construct.py, candidate_tracker.py,
-                         cocktail_design.py
+                         cocktail_design.py, cocktail_transcript.py
 data/reference/          committed reference sequences, each with provenance
 data/designs/            the designed constructs, with their element tables
 data/candidates.tsv      the published candidate table, generated from the engine
@@ -339,6 +392,7 @@ docs/m2_construct_assembler.md  the M2 report, same deal
 docs/m3_ecarpholin_s_construct.md  the M3 design document, same deal
 docs/m4_candidate_tracker.md  the M4 candidate map, same deal
 docs/m5_big_four_cocktail.md  the M5 cocktail plan and its two constructs, same deal
+docs/m6_single_transcript.md  the M6 design document: two payloads on one transcript, same deal
 docs/m1_plan.md          the M1 plan, written before the code
 design-log.md            the running log of design decisions
 tests/                   pytest and hypothesis tests

@@ -30,6 +30,9 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `rcsb_8V13_centi_snx_b03.fasta` | The Centi-SNX-B03 Fab, heavy and light chains, in complex with a short neurotoxin | <https://www.rcsb.org/fasta/entry/8V13/display> | RCSB Protein Data Bank. Paper: Glanville J, Kwong K, et al. 2025, *Cell*. Patent US20240294618A1 |
 | `rcsb_9CLP_h11_fab.fasta` | The H11 Fab, heavy and light chains, in complex with ecarin | <https://www.rcsb.org/fasta/entry/9CLP/display> | RCSB Protein Data Bank. Released 2024-09-11. Ecarin is the zinc metalloproteinase-disintegrin of *Echis carinatus* |
 | `rcsb_9HUO_a01.fasta` | The A01 monoclonal antibody, light and heavy chains, bound to alpha-cobratoxin at pH 5.5 | <https://www.rcsb.org/fasta/entry/9HUO/display> | RCSB Protein Data Bank. Released 2025-11-19. The same complex is deposited as 9FYT (pH 4.5) and 9HXO (pH 6.0) |
+| `rcsb_31FW_p2a_construct.fasta` | The human tRNA ligase complex expression construct, whose entity 4 carries the porcine teschovirus-1 2A peptide at residues 51 to 69. One of the two sources for the P2A constant in `src/mrna/p2a.py` | <https://www.rcsb.org/fasta/entry/31FW/display> | RCSB Protein Data Bank |
+| `rcsb_8E99_p2a_construct.fasta` | The NMDA receptor expression construct, whose entity 2 carries the identical P2A peptide at residues 4 to 22, preceded by the GSG spacer. The second, independent source for the same peptide | <https://www.rcsb.org/fasta/entry/8E99/display> | RCSB Protein Data Bank |
+| `biorxiv_2026.09.01.748349_vhh_campaign.xlsx` | The VHH campaign table of the preprint whose supplement holds the D2 and E2 designed nanobody sequences. Copied byte for byte from supplementary data 1 (`media-1.zip`), whose own checksum is recorded in the refresh note of the M4 report | <https://www.biorxiv.org/content/10.64898/2026.09.01.748349v1> (supplementary data 1) | bioRxiv preprint, Overath MD, Lundquist EVS, Bjornsson KH, et al. 2026. The supplement is openly downloadable without login |
 
 ## Derived files
 
@@ -44,6 +47,7 @@ Raw downloads live in `data/reference/raw/`. Derived files live in
 | `ecarpholin_S_P48650.fasta` | `scripts/prepare_reference_data.py` | The UniProt ecarpholin S record, header preserved |
 | `albumin_P02768.fasta` | `scripts/prepare_reference_data.py` | The UniProt human serum albumin precursor record, header preserved |
 | `tpl1158_01_c09_vhh.fasta` | `scripts/prepare_reference_data.py` | The 123-residue TPL1158_01_C09 camelid VHH: entity 1 of PDB 9GCN, selected by script from the entry's polymer entities |
+| `d2_vhh.fasta` | `scripts/prepare_reference_data.py` | The 122-residue D2 nanobody, a de novo designed anti-alpha-cobratoxin VHH, read from sheet `All_designs` of the preprint supplement by a standard-library xlsx reader, and pinned to the deposited row by two assertions: exactly one D2 row, and the 9GCN framework-1 prefix that the preprint says its designs carry |
 | `candidate_fab_chains.fasta` | `scripts/prepare_reference_data.py` | The eight antibody chains of the four multi-chain payloads, taken from entries 8DA1, 8V13, 9CLP and 9HUO. The toxin entities in those entries are not written out: they are the targets, not the payloads |
 
 ## Designed constructs

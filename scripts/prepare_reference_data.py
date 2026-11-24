@@ -15,6 +15,9 @@ from __future__ import annotations
 
 import hashlib
 import re
+import xml.etree.ElementTree as ElementTree
+import zipfile
+from collections.abc import Iterator
 from pathlib import Path
 
 from mrna.fasta import read_fasta, write_fasta
@@ -372,6 +375,177 @@ def write_tpl1158_vhh() -> Path:
     return target
 
 
+#: Framework 1 of the 9GCN nanobody, the scaffold the designed VHHs of the
+#: preprint supplement are built on: the 25 residues before the first CDR
+#: diverges. The committed TPL1158_01_C09 sequence starts with these
+#: residues, and so does every design in the supplement's campaign table,
+#: which is the cross-check the D2 extraction performs.
+#:
+#: Sources: bioRxiv 2026.09.01.748349, supplementary data 1, sheet
+#: All_designs, framework column; PDB entry 9GCN, entity 1.
+NINEGCN_FRAMEWORK_1 = "QVQLQESGGGLVQPGGSLRLSCAAS"
+
+
+def _xlsx_rows(path: Path, sheet: str) -> Iterator[list[str]]:
+    """Read one sheet of an xlsx file, using only the standard library.
+
+    An xlsx file is a zip of XML parts, and the campaign table this
+    repository needs from the preprint supplement is plain cells with plain
+    strings. Implementing the forty lines here keeps the reference-data
+    pipeline free of a spreadsheet dependency, which is the same trade the
+    engine made when it implemented the codon adaptation index rather than
+    depend on a package for it.
+
+    Args:
+        path: The xlsx file.
+        sheet: The name of the sheet to read.
+
+    Yields:
+        The rows of the sheet, each a list of cell values as strings. An
+        empty cell is the empty string.
+
+    Raises:
+        ValueError: If the sheet does not exist.
+    """
+    namespace = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+    relationship_namespace = (
+        "{http://schemas.openxmlformats.org/officeDocument/2006/relationships}"
+    )
+    # The file is a committed download whose checksum is pinned in
+    # data/reference/CHECKSUMS.sha256, so the XML is read from bytes the
+    # test suite has already hashed. defusedxml would be a dependency for
+    # data this repository already holds to a checksum.
+    with zipfile.ZipFile(path) as archive:
+        workbook = ElementTree.fromstring(archive.read("xl/workbook.xml"))  # noqa: S314
+        rel_bytes = archive.read("xl/_rels/workbook.xml.rels")
+        relationships = ElementTree.fromstring(rel_bytes)  # noqa: S314
+        targets = {
+            rel.get("Id"): rel.get("Target")
+            for rel in relationships
+        }
+        target = None
+        for element in workbook.iter(f"{namespace}sheet"):
+            if element.get("name") == sheet:
+                target = targets.get(element.get(f"{relationship_namespace}id"))
+                break
+        if target is None:
+            msg = f"{path.name} holds no sheet named {sheet!r}"
+            raise ValueError(msg)
+        # A relationship target is either relative to xl/ ("worksheets/
+        # sheet1.xml") or absolute from the package root ("/xl/worksheets/
+        # sheet1.xml"); both spellings occur in the wild.
+        part = target.lstrip("/")
+        if not part.startswith("xl/"):
+            part = f"xl/{part}"
+        sheet_xml = ElementTree.fromstring(archive.read(part))  # noqa: S314
+
+        shared: list[str] = []
+        if "xl/sharedStrings.xml" in archive.namelist():
+            shared_bytes = archive.read("xl/sharedStrings.xml")
+            shared_root = ElementTree.fromstring(shared_bytes)  # noqa: S314
+            for item in shared_root.iter(f"{namespace}si"):
+                shared.append("".join(
+                    node.text or ""
+                    for node in item.iter(f"{namespace}t")
+                ))
+
+        for row in sheet_xml.iter(f"{namespace}row"):
+            cells: dict[int, str] = {}
+            for cell in row.iter(f"{namespace}c"):
+                reference = cell.get("r", "")
+                column = re.match(r"[A-Z]+", reference)
+                index = 0
+                if column:
+                    for character in column.group(0):
+                        index = index * 26 + ord(character) - ord("A") + 1
+                kind = cell.get("t")
+                if kind == "inlineStr":
+                    inline = cell.find(f"{namespace}is")
+                    text = "".join(
+                        node.text or ""
+                        for node in (inline.iter(f"{namespace}t") if inline is not None else ())
+                    )
+                elif kind == "s":
+                    value = cell.find(f"{namespace}v")
+                    text = (
+                        shared[int(value.text or "0")]
+                        if value is not None
+                        else ""
+                    )
+                else:
+                    value = cell.find(f"{namespace}v")
+                    text = value.text or "" if value is not None else ""
+                cells[index - 1] = text
+            width = (max(cells) + 1) if cells else 0
+            yield [cells.get(position, "") for position in range(width)]
+
+
+def write_d2_payload() -> Path:
+    """Extract the D2 nanobody from the preprint supplement.
+
+    D2 is one of the two lead VHHs of the 2026-11-21 refresh: a de novo
+    designed single-domain antibody against alpha-cobratoxin of the monocled
+    cobra, with in vivo rescue data, whose sequence sits in the openly
+    downloadable supplement. The extraction is pinned to the supplement by
+    two assertions: the campaign table holds exactly one D2 row, and the
+    sequence starts with the 9GCN framework the preprint says its designs
+    are built on, the same framework the committed TPL1158_01_C09 sequence
+    starts with.
+
+    Args:
+        None.
+
+    Returns:
+        The path of the written file.
+
+    Raises:
+        ValueError: If the supplement does not hold the expected row, or if
+            the sequence fails either assertion.
+    """
+    rows = list(
+        _xlsx_rows(
+            RAW / "biorxiv_2026.09.01.748349_vhh_campaign.xlsx",
+            "All_designs",
+        ),
+    )
+    header = rows[0]
+    columns = {
+        name: header.index(name)
+        for name in ("well_id", "binder_id", "sequence")
+    }
+    matches = [row for row in rows[1:] if row[columns["well_id"]] == "D2"]
+    if len(matches) != 1:
+        msg = (
+            "the campaign table holds "
+            f"{len(matches)} rows for D2, expected exactly one"
+        )
+        raise ValueError(msg)
+    d2 = matches[0][columns["sequence"]]
+    if not d2 or not d2.isalpha():
+        msg = "the D2 row does not hold an amino-acid sequence"
+        raise ValueError(msg)
+    if not d2.startswith(NINEGCN_FRAMEWORK_1):
+        msg = (
+            "the D2 sequence does not start with the 9GCN framework the "
+            "preprint says its designs are built on"
+        )
+        raise ValueError(msg)
+    committed = read_fasta(OUT / "tpl1158_01_c09_vhh.fasta")[0][1]
+    if not committed.startswith(NINEGCN_FRAMEWORK_1):
+        msg = "the committed TPL1158_01_C09 sequence no longer matches the framework"
+        raise ValueError(msg)
+    binder = matches[0][columns["binder_id"]]
+    header_text = (
+        "D2 nanobody, de novo designed against Naja kaouthia alpha-cobratoxin "
+        "| source: bioRxiv 2026.09.01.748349, supplementary data 1, sheet "
+        f"All_designs, well D2 ({binder}) | framework 9GCN | length "
+        f"{len(d2)} aa"
+    )
+    target = OUT / "d2_vhh.fasta"
+    write_fasta(target, [(header_text, d2)])
+    return target
+
+
 #: The PDB entries whose antibody chains are recorded for the M5 cocktail
 #: plan, with the entities that hold the antibody rather than the toxin.
 CANDIDATE_ANTIBODY_ENTITIES: tuple[tuple[str, str, tuple[int, ...]], ...] = (
@@ -478,6 +652,7 @@ def main() -> None:
         write_albumin(),
         write_tpl1158_vhh(),
         write_candidate_fab_chains(),
+        write_d2_payload(),
     ):
         print(f"wrote {path.relative_to(ROOT)}")
 
