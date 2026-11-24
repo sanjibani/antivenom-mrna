@@ -399,10 +399,14 @@ def test_every_payload_loads() -> None:
     }
 
 
-def test_the_two_single_chain_payloads_are_the_only_ones() -> None:
-    """A single polypeptide is what one transcript can carry."""
+def test_the_single_chain_payloads_are_the_transcribable_ones() -> None:
+    """A single polypeptide is what one transcript can carry.
+
+    The 2026-11-21 refresh added D2, so the set is three payloads now; the
+    M5 report states the tier count and the minimal cover separately.
+    """
     single = {p.name for p in load_payloads() if p.is_single_polypeptide}
-    assert single == {"E113", "TPL1158_01_C09"}
+    assert single == {"E113", "TPL1158_01_C09", "D2"}
 
 
 def test_every_payload_has_the_chains_its_specification_names() -> None:
@@ -420,6 +424,7 @@ def test_the_published_payload_lengths_are_the_database_lengths() -> None:
     expected = {
         "E113": 239,
         "TPL1158_01_C09": 123,
+        "D2": 122,
         "Centi-LNX-D09": 451,
         "Centi-SNX-B03": 445,
         "H11": 434,

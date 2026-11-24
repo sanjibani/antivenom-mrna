@@ -40,6 +40,7 @@ from mrna.cocktail import (
     EXCLUDED_FAMILIES,
     Cell,
     CocktailPlan,
+    payload_groups_at,
     plan_all_tiers,
 )
 from mrna.fasta import write_fasta
@@ -189,6 +190,7 @@ def build_report(tracker: CandidateTracker) -> str:
     payloads = {payload.name: payload for payload in load_payloads()}
 
     buildable = next(plan for plan in plans if plan.tier == "single-polypeptide")
+    tier_groups = payload_groups_at(tracker, "single-polypeptide")
     members = [payloads[name] for name in buildable.payload_ids]
     constructs = [(payload, *build_construct(payload, usage_table)) for payload in members]
 
@@ -288,8 +290,9 @@ def build_report(tracker: CandidateTracker) -> str:
     lines.append(
         "Read down the list of payloads and the order is the story. The "
         "published record has candidates for most of the matrix. The public "
-        "sequence databases do not. The transcripts that can be built from "
-        f"what is public are {len(buildable.payloads)}.",
+        "sequence databases do not. The payloads a transcript can carry from "
+        f"what is public number {len(tier_groups)}, and a minimal cover of "
+        f"the tier's cells needs {len(buildable.payloads)} of them.",
     )
     lines.append("")
 
@@ -351,17 +354,21 @@ def build_report(tracker: CandidateTracker) -> str:
 
     lines.append(
         f"## 4. The {len(constructs)} construct"
-        f"{'' if len(constructs) == 1 else 's'} that can be built",
+        f"{'' if len(constructs) == 1 else 's'} of the minimal cover",
     )
     lines.append("")
     lines.append(
-        f"At the `single-polypeptide` tier there are {len(buildable.payloads)} "
-        "payloads, and every one of them can be transcribed from a published "
-        "sequence as it stands, with no engineering step in between. The "
-        "others are Fab fragments or two-chain antibodies: converting them "
-        "into one transcript needs a single-chain format that does not exist "
-        "in the published data, which means the neutralisation data would no "
-        "longer belong to the molecule being transcribed.",
+        f"At the `single-polypeptide` tier there are {len(tier_groups)} "
+        "payloads a transcript can carry as they stand, each with a public "
+        "sequence and a one-polypeptide format, and no engineering step in "
+        "between. A minimal cover of the tier's cells needs "
+        f"{len(buildable.payloads)} of them, because payloads that cover the "
+        "same cell stand in for one another, and the constructs below are "
+        "that cover. The payloads the tier drops below it are Fab fragments "
+        "or two-chain antibodies: converting them into one transcript needs "
+        "a single-chain format that does not exist in the published data, "
+        "which means the neutralisation data would no longer belong to the "
+        "molecule being transcribed.",
     )
     lines.append("")
     for payload, construct, design in constructs:
@@ -409,9 +416,9 @@ def build_report(tracker: CandidateTracker) -> str:
         group for group in buildable.payloads if group.patent_status == "none-located"
     ]
     lines.append(
-        f"These {len(buildable.payloads)} payloads are the only ones that can "
-        "be transcribed, and a public patent search finds an application "
-        f"covering {len(blocked)} of them.",
+        f"The cover above holds {len(buildable.payloads)} payloads, and a "
+        "public patent search finds an application covering "
+        f"{len(blocked)} of them.",
     )
     lines.append("")
     for group in blocked:

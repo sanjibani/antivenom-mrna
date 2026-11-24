@@ -75,8 +75,19 @@ footnote.
 
 ## Status
 
-Milestones are sequenced, not scheduled. Every one ships an artifact, a public
-post, and a validation signal, so that there are no silent stretches.
+Milestones are sequenced, not scheduled. Every one ships an artifact and a
+validation signal, so that there are no silent stretches.
+
+| Milestone | Artifact | Status |
+| --- | --- | --- |
+| M0 | `vax_anatomy`: reverse-engineer the anatomy of a licensed mRNA vaccine | Done, see [the M0 report](docs/m0_vax_anatomy.md) |
+| M1 | Codon optimiser (CAI, GC, motif avoidance) with tests | Done, see [the M1 report](docs/m1_codon_optimizer.md) |
+| M2 | Full-construct assembler, curated UTR library, secondary-structure checks | Done, see [the M2 report](docs/m2_construct_assembler.md) |
+| M3 | One toxin, one published neutralising antibody, one full construct, one design document | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
+| M4 | Literature map: Big Four toxins to antibodies to sequences to patents | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
+| M5 | The Big Four cocktail, planned from the literature map and built where it can be | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
+| M6 | Two payloads on one transcript, the 2A element sourced at last, the candidate table refreshed | Done, see [the M6 report](docs/m6_single_transcript.md) |
+| M7+ | Regional variants, design iteration | Not started |
 
 | Milestone | Artifact | Signal | Status |
 | --- | --- | --- | --- |
@@ -87,8 +98,9 @@ post, and a validation signal, so that there are no silent stretches.
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | First chance of being cited | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
 | M5 | The Big Four cocktail, planned from the literature map and built where it can be | First design that names its own blockers | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
 | M6 | Two payloads on one transcript, the 2A element sourced at last, the candidate table refreshed | The milestone that closes M5's open question | Done, see [the M6 report](docs/m6_single_transcript.md) |
-| M7 | Regional venom variation weighted into the coverage question | The matrix learns what a state's venom weighs | Done, see [the M7 report](docs/m7_regional_variants.md) |
-| M8+ | Design iteration, matrix widening (SVSP, snaclec), partner outreach | Sustained cadence | Not started |
+
+| M7 | Regional venom variation weighted into the coverage question | Done, see [the M7 report](docs/m7_regional_variants.md) |
+| M8+ | Design iteration, matrix widening (SVSP, snaclec), partner outreach | Not started |
 
 ## What M7 established
 
@@ -121,6 +133,46 @@ what does the plan cover *in the venom a patient in that state carries*?
   and no composition is recorded for them, because a fraction nobody
   printed is not a fraction anybody can check.
 
+## What M6 established
+
+Two payloads on one transcript, and the element that makes it possible.
+
+M6 answers the design question M5 deferred: whether several payloads can
+share one transcript. The 2A peptide M5 could not source is sourced now
+under the repository's own rule, and the rule is what makes the answer
+worth having.
+
+- **The P2A peptide is the same molecule in two deposited constructs.** PDB
+  entry 31FW, entity 4, residues 51 to 69, and PDB entry 8E99, entity 2,
+  residues 4 to 22, deposited by different groups, carry the identical
+  19-residue porcine teschovirus-1 2A peptide, in both cases preceded by
+  the glycine-serine-glycine spacer the characterisation recommends. Both
+  raw entries are committed with checksums, and the test suite extracts the
+  peptide from each and checks it against the engine's constant.
+- **The skip is not a cleavage, and the cost is asymmetric.** The upstream
+  product keeps a 21-residue C-terminal scar the published TPL1158_01_C09
+  data does not describe; the downstream product starts with one proline
+  that a signal peptide follows, and signal peptidase removes both
+  together. The payload with the stronger published evidence goes
+  downstream: E113, at L4, is reproduced residue for residue, and the scar
+  goes on the nanobody whose data was binding-only at L2.
+- **The construct is 1,722 nt, one open reading frame of 420 residues.**
+  CAI 0.9882, coding-region GC 0.6381, no forbidden motif in any coding
+  element, both mature products checked by translation against the
+  published molecules, and the element table carries nine rows: cap, 5'
+  UTR, signal peptide, VHH, P2A, second signal peptide, scFv, 3' UTR,
+  poly(A).
+- **A third payload is committed and waits.** D2, the designed nanobody
+  from the refreshed M4 table, is reference data now; it does not join the
+  transcript because a three-payload design has two scars and two ratios
+  where this one has one, and the report states that rather than resolving
+  it.
+- **The licence position is unchanged and restated.** TPL1158_01_C09 is
+  named 71 times in WO2025078529A1; the transcript is a design artifact,
+  not a freedom-to-operate opinion.
+
+
+
 ## What M5 established
 
 The Big Four cocktail, and why the published record cannot supply one.
@@ -151,13 +203,15 @@ attrition down those tiers is the result.
   is about 64.5 per cent phospholipase A2 by mass, so the most under-covered
   species of the Big Four is the one where a single good antibody would buy
   the most.
-- **Two constructs can be built from public material.** E113, the scFv already
+- **M5 built two constructs from public material.** E113, the scFv already
   published in M3, reproduced byte for byte by the M5 pipeline, and
   TPL1158_01_C09, a 123-residue camelid VHH against alpha-cobratoxin from
-  PDB 9GCN. The other four payloads are Fabs or two-chain antibodies:
-  converting them into one transcript means inventing a single-chain format
-  that the published neutralisation data does not describe, so the data would
-  no longer belong to the molecule being transcribed.
+  PDB 9GCN. The 2026-11-21 refresh later added a third transcribable
+  payload, D2, which the minimal cover does not need. The other payloads
+  are Fabs or two-chain antibodies: converting them into one transcript
+  means inventing a single-chain format that the published neutralisation
+  data does not describe, so the data would no longer belong to the
+  molecule being transcribed.
 - **The licence is the real blocker, and it is stated as a fact.** A public
   patent search finds an application covering TPL1158_01_C09: it is named 71
   times in WO2025078529A1, published by Danmarks Tekniske Universitet. For
@@ -178,7 +232,7 @@ every number is computed from the M4 table rather than written by hand.
 The literature map, and the surprising part of it.
 
 M4 records every published antibody candidate with a claimed neutralising
-activity against a toxin, or the whole venom, of a Big Four species: 22
+activity against a toxin, or the whole venom, of a Big Four species: 23
 candidates, with the species, toxin family, target, antibody, format, sequence
 source, patent status, what each was tested against, its evidence level and
 its mRNA suitability. The table is generated from
@@ -187,11 +241,19 @@ its mRNA suitability. The table is generated from
 the code that validates it.
 
 - **Sequence availability, not antibody discovery, is the bottleneck.** Only
-  8 of the 22 candidates have a variable-region sequence that can be located
+  9 of the 23 candidates have a variable-region sequence that can be located
   in a public database. The rest are in a paper's supplementary table, in a
   patent, or nowhere a machine can read. For a project whose contribution is
   the mRNA layer, that is the number that matters, and it is much easier to
   move than discovering an antibody.
+- **The 2026-11-21 refresh added one candidate and corrected one citation.**
+  The candidate is D2, a de novo designed VHH against alpha-cobratoxin of
+  the monocled cobra with in vivo rescue data, its sequence verified present
+  in an openly downloadable preprint supplement. The correction is the MKSS1
+  citation, which carried the wrong author list against PubMed. The krait
+  phospholipase A2 gap and the Russell's viper metalloproteinase gap are
+  unchanged, and every exclusion the refresh made is recorded with its
+  reason in the M4 report.
 - **Common krait is almost entirely unprotected.** Krait venom is about
   64.5 per cent phospholipase A2 by mass, and no published antibody
   candidate in the survey targets krait phospholipase A2. The one krait
@@ -321,6 +383,7 @@ uv run python scripts/construct_assembler.py --write  # refresh docs/m2_construc
 uv run python scripts/venom_construct.py --write      # refresh docs/m3_ecarpholin_s_construct.md
 uv run python scripts/candidate_tracker.py --write    # refresh docs/m4_candidate_tracker.md
 uv run python scripts/cocktail_design.py --write     # refresh docs/m5_big_four_cocktail.md
+uv run python scripts/cocktail_transcript.py --write  # refresh docs/m6_single_transcript.md
 ```
 
 Optional tools are installed on demand rather than declared as extras, so that
@@ -345,12 +408,13 @@ src/mrna/assemble.py     the construct assembler and the regulatory-format eleme
 src/mrna/candidates.py   the curated candidate table for the Big Four, with its sources
 src/mrna/tracker.py      the tracker engine: validation, coverage and gap analysis
 src/mrna/payload.py      the antibody payloads a construct can carry, and their chains
+src/mrna/p2a.py          the P2A ribosome-skipping element, read from two deposited constructs
 src/mrna/cocktail.py     the cocktail planner: exact set cover over species and toxin families
 src/mrna/reference.py    loaders for the committed reference data
 src/mrna/fasta.py        minimal FASTA reader and writer
 scripts/                 prepare_reference_data.py, vax_anatomy.py, codon_optimizer.py,
                          construct_assembler.py, venom_construct.py, candidate_tracker.py,
-                         cocktail_design.py
+                         cocktail_design.py, cocktail_transcript.py
 data/reference/          committed reference sequences, each with provenance
 data/designs/            the designed constructs, with their element tables
 data/candidates.tsv      the published candidate table, generated from the engine
@@ -362,6 +426,7 @@ docs/m2_construct_assembler.md  the M2 report, same deal
 docs/m3_ecarpholin_s_construct.md  the M3 design document, same deal
 docs/m4_candidate_tracker.md  the M4 candidate map, same deal
 docs/m5_big_four_cocktail.md  the M5 cocktail plan and its two constructs, same deal
+docs/m6_single_transcript.md  the M6 design document: two payloads on one transcript, same deal
 docs/m1_plan.md          the M1 plan, written before the code
 design-log.md            the running log of design decisions
 tests/                   pytest and hypothesis tests
@@ -381,10 +446,12 @@ tests/                   pytest and hypothesis tests
   partners take it from L1 upward. The McLellan 2P construct is the precedent
   that a single published design can change the field without a single
   experiment run by its authors.
-- **The biological rationale is written by a human.** Code, tests and
+- **The biological rationale is owned by a human.** Code, tests and
   citations are machine-written. The reasoning about why a construct is
-  designed the way it is, in the pull request body, is written by the project
-  owner. That is the learning footprint, and it is the point.
+  designed the way it is, in the pull request body and in the `Owner's note`
+  entries of `design-log.md`, is drafted for the project owner, read by them,
+  and amended where their judgement differs. That is the learning footprint,
+  and it is the point.
 
 ## Contributing
 
@@ -397,8 +464,7 @@ can be checked.
 ## Citation
 
 If you use the designs or the engine, please cite this repository and say
-which version you used. A `CITATION.cff` file will be added once the designs
-land.
+which version you used. The preferred form is recorded in `CITATION.cff`.
 
 ## Licence
 

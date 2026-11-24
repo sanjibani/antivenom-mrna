@@ -19,9 +19,11 @@ located in a public database, the row says ``none`` rather than guessing,
 because "the sequence is not publicly available" is a finding, and it is the
 finding that decides whether a candidate can be transcribed at all.
 
-Note that the table is a snapshot of a survey performed on 2026-11-01. It is
-not exhaustive, and a row saying ``none`` means "not located during this
-survey", not "does not exist".
+Note that the table is a snapshot of a survey performed on 2026-11-01 and
+refreshed on 2026-11-21. It is not exhaustive, and a row saying ``none``
+means "not located as of the latest refresh", not "does not exist". What
+each refresh checked, and why each source did or did not become a row, is
+recorded in :data:`REFRESH_NOTES`.
 """
 
 from __future__ import annotations
@@ -38,8 +40,10 @@ __all__ = [
     "FORMATS",
     "MRNA_SUITABILITY",
     "PATENT_STATUS",
+    "REFRESH_NOTES",
     "SPECIES_FAMILIES",
     "SPECIES_TOXIN_FAMILIES",
+    "SURVEY_DATES",
     "TOXIN_FAMILIES",
     "TOXIN_FAMILY_NOTES",
     "Candidate",
@@ -288,6 +292,68 @@ TOXIN_FAMILY_NOTES: dict[str, str] = {
     ),
 }
 
+#: The dates the table was built and re-checked, in order.
+#:
+#: The first date is the survey that populated the table. Every later date
+#: is a refresh: a re-check of what moved, recorded in
+#: :data:`REFRESH_NOTES`, so that the next searcher inherits the search and
+#: not just the number. A row saying ``none`` means "not located as of the
+#: latest date here", never "does not exist".
+SURVEY_DATES: tuple[str, ...] = ("2026-11-01", "2026-11-21")
+
+#: What each refresh checked, and why each item did or did not become a row.
+#:
+#: A refresh has three honest outcomes: a row is added, a source is excluded
+#: for a stated reason, or a source is identified but cannot be verified. All
+#: three belong in the record, because a negative result that is not written
+#: down is a search that the next refresh repeats for nothing.
+REFRESH_NOTES: tuple[tuple[str, str, str], ...] = (
+    (
+        "2026-11-21",
+        "Overath et al. 2026, bioRxiv 2026.09.01.748349",
+        "added: two de novo designed VHHs, D2 and E2, with in vivo rescue "
+        "of mice against alpha-cobratoxin of Naja kaouthia. The sequences "
+        "were verified present in the openly downloadable supplementary "
+        "data during the refresh, which is why the row counts as public.",
+    ),
+    (
+        "2026-11-21",
+        "Damsbo et al. 2025, mAbs, PMC12218449",
+        "excluded: broadly neutralising VHHs against short-chain "
+        "alpha-neurotoxins, in vivo protection included, but the tested "
+        "panel holds no Big Four species and no Naja kaouthia short-chain "
+        "toxin.",
+    ),
+    (
+        "2026-11-21",
+        "Carroll et al. 2026, PNAS 2612168123",
+        "excluded: combinations of conserved rattlesnake serum proteins "
+        "that block viper venom lethality. Not antibodies, and no Big Four "
+        "species.",
+    ),
+    (
+        "2026-11-21",
+        "Jia et al. 2026, Toxicon, S0041010126001108",
+        "excluded: a humanized synthetic nanobody library platform. No "
+        "specific Big Four candidate in the accessible record.",
+    ),
+    (
+        "2026-11-21",
+        "Kinha 2023, doctoral thesis, DSpace 123456789/2201",
+        "identified, not added: a genetically linked bispecific nanobody "
+        "claimed to neutralise Russell's viper venom, but the repository "
+        "holds a one-page placeholder in place of the full text, so no "
+        "claim in it can be verified.",
+    ),
+    (
+        "2026-11-21",
+        "MKSS1, Kaur et al. 2019",
+        "still no public sequence located. The refresh also found the "
+        "citation carrying the wrong author list, corrected against "
+        "PubMed PMID 31689425.",
+    ),
+)
+
 #: Primary sources, keyed by the short citation used in each row.
 CITATIONS: dict[str, str] = {
     "Kumar2024": (
@@ -347,10 +413,17 @@ CITATIONS: dict[str, str] = {
         "against venom from the snake Daboia russelii formosensis. Toxins "
         "9:347. doi:10.3390/toxins9110347."
     ),
-    "Li2019": (
-        "Li W, et al. 2019. Secretory PLA2 specific single domain antibody "
-        "neutralizes Russell viper venom induced cellular and organismal "
-        "toxicity. Toxicon. PMID 31689425."
+    "Kaur2019": (
+        "Kaur M, Dubey A, Khatri M, Sehrawat S. 2019. Secretory PLA2 specific "
+        "single domain antibody neutralizes Russell viper venom induced "
+        "cellular and organismal toxicity. Toxicon 172:15-18. PMID 31689425."
+    ),
+    "Overath2026": (
+        "Overath MD, Lundquist EVS, Bjornsson KH, et al. 2026. De novo "
+        "designed single-domain antibodies against cobra venom neurotoxicity. "
+        "bioRxiv 2026.09.01.748349. Posted 2026-09-01; a preprint, not peer "
+        "reviewed. VHH sequences in the openly downloadable supplementary "
+        "data 1."
     ),
     "RCSB8IA6": (
         "RCSB Protein Data Bank entry 8IA6. Crystal structure of scFv "
@@ -571,6 +644,32 @@ CANDIDATES: tuple[Candidate, ...] = (
         species=("Naja kaouthia",),
         toxin_family="3FTx-L",
         toxin_target="alpha-cobratoxin",
+        antibody_id="D2, E2",
+        molecule_format="VHH",
+        sequence_source=("paper:bioRxiv 2026.09.01.748349 supplementary data 1",),
+        patent_status="not-assessed",
+        tested_against=(
+            "in vitro binding by Octet and in vivo rescue of mice challenged "
+            "with alpha-cobratoxin and with Naja kaouthia whole venom"
+        ),
+        evidence_level="L4",
+        mrna_suitability="ready",
+        citation="Overath2026",
+        notes=(
+            "De novo designed on the 9GCN framework, the structure this "
+            "table already holds for TPL1158_01_C09. A preprint, not peer "
+            "reviewed. Rescue was dosed at a tenfold molar excess fifteen "
+            "minutes after challenge: complete protection against the "
+            "purified toxin, 5 of 9 and 2 of 9 survivors against whole "
+            "venom. The amino-acid sequences of all 48 designs, including "
+            "both leads, were verified present in the openly downloadable "
+            "supplement during the 2026-11-21 refresh."
+        ),
+    ),
+    Candidate(
+        species=("Naja kaouthia",),
+        toxin_family="3FTx-L",
+        toxin_target="alpha-cobratoxin",
         antibody_id="C2, C21",
         molecule_format="VHH",
         sequence_source=("none",),
@@ -728,11 +827,14 @@ CANDIDATES: tuple[Candidate, ...] = (
         ),
         evidence_level="L4",
         mrna_suitability="unknown",
-        citation="Li2019",
+        citation="Kaur2019",
         notes=(
             "The only recombinant antibody in the survey with a named target "
             "toxin in Indian Russell's viper venom. No public sequence "
-            "located. The in vivo model is zebrafish, not a mammal."
+            "located. The in vivo model is zebrafish, not a mammal. The "
+            "citation originally credited this paper to the wrong author "
+            "list; corrected to Kaur et al. on 2026-11-21 against PubMed "
+            "PMID 31689425."
         ),
     ),
     Candidate(

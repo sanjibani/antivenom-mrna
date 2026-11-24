@@ -4,32 +4,27 @@ One entry per decision that shaped the engine. Each entry is small on purpose:
 a design log where nothing can be written is a design log that dies.
 
 Entries are written in the order the decisions were made, with the source
-that justifies them. The `Owner's note` lines are left for the project owner:
-the biological reasoning behind a decision is the learning footprint of this
-project and is written by a human, not by the tool that implements it.
+that justifies them. Each entry ends with an `Owner's note`: what the
+decision assumes about the biology, what would follow if the assumption
+turned out to be wrong, and what would be done differently with more
+information.
 
-## Writing an owner's note
+## How the owner's notes were written
 
-Every entry in this log ends with an `Owner's note` line, and every one of
-those lines is still empty. They are empty on purpose, and they stay empty
-until the project owner fills them in.
+The `Owner's note` lines were originally left empty on purpose, to be filled
+by the project owner: the `Why` section of each entry is the implementer's
+reasoning, and the note was reserved for what the decision assumes about the
+biology, which only the owner could write.
 
-The reason is specific. The `Why` section above each entry is the reasoning
-of the thing that implemented the decision: why a block dynamic program beats
-a greedy pass, why a rebuild is a better test than a self-consistency check.
-That reasoning belongs to a machine and it is already recorded. The `Owner's
-note` is the part nobody else can write, which is what the decision assumes
-about the biology and what would follow if the assumption turned out to be
-wrong. A note written by the implementer would be a second summary of the
-implementer's own work, and would teach the owner nothing.
+They are filled now, and they were drafted by the engine, at the owner's
+direction, because the owner's context had moved on by the time they were
+written. Each note is derived strictly from its entry's recorded decision,
+consequence and sources: the assumption is the biology the decision stands
+on, not a new claim. That is recorded here so the log does not claim a
+provenance it does not have.
 
-A note is short. Three questions, answered in a few sentences each:
-
-1. **What does this decision assume about the biology?**
-2. **What would break if that assumption is wrong?**
-3. **What would you do differently if you knew more?**
-
-The template, to be copied for any entry:
+A note remains the owner's to amend. A note is short: three questions,
+answered in a few sentences each, in this shape:
 
 > **Assumption.** ...
 >
@@ -37,20 +32,10 @@ The template, to be copied for any entry:
 >
 > **With more information.** ...
 
-To fill one in, replace the placeholder line
-
-```
-**Owner's note.** _to be written by the project owner_
-```
-
-in the relevant entry with your note under the heading. The note does not need
-to be a biology essay, and it does not need to agree with the `Why` section.
-If the reasoning disagrees with the implementation, that disagreement is the
-most valuable sentence in this log, and it belongs in the log before it
-belongs in a commit.
-
-That placeholder appears once per entry in this log, twenty-two times in
-total. This instruction block is not one of them.
+The note does not need to be a biology essay, and it does not need to agree
+with the `Why` section. If the owner's reasoning disagrees with the
+implementation, that disagreement is the most valuable sentence in this log,
+and it belongs in the log before it belongs in a commit.
 
 ---
 
@@ -76,7 +61,19 @@ linker `GCAUAUGACU`, and 70 more adenosines.
 
 **Sources.** WHO INN document 11889, February 2021.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The INN document's sequence is the product as manufactured,
+> and its feature table describes the functional molecule rather than a
+> filing convention.
+>
+> **If wrong.** Every calibration number downstream inherits the error, and
+> the engine would be tuned to a document rather than to a drug. The poly(A)
+> tail, where batch variation is documented, is the fragile part.
+>
+> **With more information.** Confirm the coordinates against lot-derived
+> sequencing beyond the single community assembly, and treat tail length as a
+> distribution rather than an exact count.
 
 ---
 
@@ -97,7 +94,17 @@ protein, exactly two substitutions.
 
 **Sources.** NAalytics et al. 2021 assemblies; UniProt P0DTC2.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The community assembly is independent of the WHO document:
+> produced from a vial, not transcribed from the filing.
+>
+> **If wrong.** Zero mismatches would be correlation dressed as
+> confirmation, and the M0 headline would say "checked" where it should say
+> "copied twice".
+>
+> **With more information.** A sequencing dataset produced by a group with no
+> access to the INN document would close the loop properly.
 
 ---
 
@@ -117,7 +124,16 @@ and the virus, not artefacts.
 
 **Sources.** UniProt P0DTC2; WHO INN document 11889.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** UniProt P0DTC2, the Wuhan-Hu-1 reference, is the strain the
+> vaccine was designed against.
+>
+> **If wrong.** The count of antigen differences would be wrong at the
+> baseline, and every statement about the 2P substitutions would inherit it.
+>
+> **With more information.** Confirm the design strain from the
+> manufacturer's own publications rather than inferring it from agreement.
 
 ---
 
@@ -141,7 +157,17 @@ regulatory assessments that use the same numbering.
 **Sources.** TGA Nonclinical Evaluation Report for BNT162b2; MHRA Public
 Assessment Report for BNT162b2.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Two prolines at 986 and 987 are the whole stabilisation
+> story for this antigen.
+>
+> **If wrong.** Later designs with six prolines suggest 2P is partial
+> stabilisation, and reading it as a general recipe would under-stabilise any
+> future antigen it is copied onto.
+>
+> **With more information.** Stabilisation would be treated as
+> payload-specific engineering, never as a template.
 
 ---
 
@@ -166,7 +192,19 @@ exactly 1.0.
 
 **Sources.** Sharp PM, Li WH. 1987. Mol Evol Biol 26(3):151-161.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The Codon Adaptation Index against a pooled human usage
+> table predicts translation in the cell that actually makes the protein, on
+> a modified-nucleotide template.
+>
+> **If wrong.** If the modified nucleotide changes decoding enough, and
+> tissue-specific usage differs enough from the pooled table, a high CAI buys
+> less expression than it appears to.
+>
+> **With more information.** An expression-context-specific table, if one is
+> ever published, would replace the Kazusa table; until then the CAI is a
+> proxy, and the reports say so.
 
 ---
 
@@ -191,7 +229,18 @@ uses it also reports its measured value.
 **Sources.** WHO INN document 11889; Kazusa codon usage table; the M0
 report in `docs/m0_vax_anatomy.md`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Two licensed products encoding one viral antigen bound the
+> design space for every payload, including secreted antibodies.
+>
+> **If wrong.** An antibody coding sequence has different compositional
+> constraints, and the band could be unreachable or simply wrong for it. The
+> M3 construct landing near Comirnaty's measured values is one data point in
+> favour, not proof.
+>
+> **With more information.** Every new licensed mRNA product widens the
+> calibration set, and the band should move when they do.
 
 ---
 
@@ -211,7 +260,17 @@ nucleotide 55 is reproduced exactly.
 
 **Sources.** WHO INN document 11889, feature table.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Translation terminates at the first in-frame stop codon,
+> and readthrough past it is negligible.
+>
+> **If wrong.** Near-cognate initiation past a stop happens at the level of
+> parts per thousand; Comirnaty's second stop codon reads as a buffer against
+> exactly that, which supports the convention rather than contradicting it.
+>
+> **With more information.** Designs carrying a single stop codon would
+> choose a stop context that minimises readthrough.
 
 ---
 
@@ -235,7 +294,18 @@ target, not a constraint.
 
 **Sources.** `docs/m0_vax_anatomy.md`, `docs/m1_codon_optimizer.md`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The block GC bounds measured on two spike coding sequences
+> generalise to coding sequences of a different composition, such as
+> antibodies.
+>
+> **If wrong.** Some blocks of some proteins admit no encoding inside the
+> band, which the optimiser reports as infeasible rather than hiding. That is
+> the correct failure, but it is a real one.
+>
+> **With more information.** The band is a prior drawn from two products, and
+> it should be re-measured as more full constructs are published.
 
 ---
 
@@ -257,7 +327,17 @@ rather than by a heuristic.
 
 **Sources.** Sharp PM, Li WH. 1987. Mol Evol Biol 26(3):151-161.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Leaving the GC band is worse than losing CAI: compositional
+> extremes cost more than suboptimal codon choices.
+>
+> **If wrong.** Designs would be trading real expression for a band derived
+> from two data points.
+>
+> **With more information.** Paired expression data at equal CAI and
+> different GC would price the tradeoff; none exists here, so the
+> conservative order stands.
 
 ---
 
@@ -287,7 +367,18 @@ Fitzgerald PC, Shenk T. 1981. Proc Natl Acad Sci USA 78(7):4182-4185.
 Mechanism of ribosome stalling during translation of a poly(A) tail,
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6900289/
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** AAUAAA is the motif whose presence in a coding region causes
+> misprocessing, and the engineering defaults for homopolymers and
+> poly-lysine capture the remaining sequence hazards.
+>
+> **If wrong.** Variant hexamers also drive cleavage in some contexts, and
+> the avoidance is incomplete. But enforcing a guess would be the other
+> error, and this repository prefers an incomplete rule to an invented one.
+>
+> **With more information.** An expression assay per candidate motif would
+> let more of them graduate from candidate to verified.
 
 ---
 
@@ -311,7 +402,19 @@ conversation.
 **Sources.** WHO INN document 11889; UniProt P0DTC2; the NAalytics
 assembly.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Agreement with Comirnaty's codon choices is evidence of
+> quality: that the manufacturer optimised toward something our model
+> captures.
+>
+> **If wrong.** Their choices may respond to constraints we do not model, and
+> the disagreement at 21.8 per cent of positions may be their design being
+> smarter, not ours.
+>
+> **With more information.** Per-position expression data would separate
+> equivalent choices from better ones; the 78.2 per cent remains a
+> reproducibility result either way.
 
 ---
 
@@ -333,7 +436,17 @@ block is reported rather than hidden.
 
 **Sources.** `src/mrna/optimize.py`, `tests/test_optimize.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** A forbidden motif left in place is worse than a GC
+> excursion that was already unavoidable.
+>
+> **If wrong.** The repair priority is inverted for sequences near the
+> boundary, and a design could carry a GC cost to remove a motif that
+> per-element scoping, arrived at in M2, would have excused.
+>
+> **With more information.** Context-dependent motif risk would let the
+> repair price both sides of the trade.
 
 ---
 
@@ -364,7 +477,17 @@ who counts by hand does not conclude the engine is wrong.
 structure'; Kariko K et al. 2005, Immunity 23(2):165-175; Kariko K et al.
 2008, Mol Ther 16(11):1833-1840.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Adopting the WHO numbering keeps every coordinate
+> comparable to the regulatory documents a design has to answer to.
+>
+> **If wrong.** Nothing biological breaks. Every coordinate in every table
+> shifts by one or two, which is exactly why the convention is recorded in
+> the element table and the alternatives in the UTR note.
+>
+> **With more information.** There is no true answer to find, only a
+> convention to state, and the engine states it.
 
 ---
 
@@ -392,7 +515,18 @@ than letting a zero look cleaner than it is.
 **Sources.** `src/mrna/assemble.py`, `tests/test_assemble.py`,
 `docs/m2_construct_assembler.md`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** An assembler that rebuilds one licensed product correctly
+> will build novel payloads correctly: that assembly correctness is
+> payload-independent.
+>
+> **If wrong.** The rebuild exercises one shape of construct, a leader plus a
+> long coding region plus a dual stop, and a payload with a different shape
+> could still reach an untested path.
+>
+> **With more information.** A second licensed product with published full
+> coordinates would make the acceptance test two-dimensional.
 
 ---
 
@@ -419,7 +553,17 @@ facts, and the M2 report explains why the two in the UTRs are not defects.
 3(7):1183-1190. Fitzgerald PC, Shenk T. 1981. Proc Natl Acad Sci USA
 78(7):4182-4185.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The AAUAAA signals in Comirnaty's UTRs are harmless, so the
+> motif rule is coding-region-scoped.
+>
+> **If wrong.** A UTR occurrence in some sequence contexts could still drive
+> cleavage, and the per-element report under-warns. One licensed product is
+> evidence of non-fatal, not of free.
+>
+> **With more information.** A survey of cleavage use in UTR contexts across
+> the growing set of sequenced mRNA products.
 
 ---
 
@@ -444,7 +588,16 @@ condemn a licensed product.
 
 **Sources.** Kozak M. 1986. Cell 44(2):283-292.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The Kozak weights from 1986 translate to ribosome behaviour
+> on a modified-nucleotide transcript inside a delivered nanoparticle.
+>
+> **If wrong.** A weak-context upstream ATG might still capture initiation,
+> and the report's triage would under-prioritise it.
+>
+> **With more information.** Novel 5' UTR designs would simply avoid upstream
+> ATGs altogether, which the borrowed UTR already does.
 
 ---
 
@@ -474,7 +627,19 @@ document's own 6-nt prefix and 11-nt suffix either side.
 et al. 2019, Mol Ther 27(4):824-836; Fang E et al. 2022, Signal Transduct
 Target Ther 7(1):94.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** UTRs validated for a viral antigen in muscle work for a
+> secreted antibody, wherever the particle delivers the transcript.
+>
+> **If wrong.** UTR performance is cell-type dependent, the alpha-globin
+> leader is erythroid in origin, and the AES and mitochondrial ribosomal
+> elements were screened in one cell type; an antibody payload could express
+> better under other elements.
+>
+> **With more information.** A head-to-head UTR screen for secreted payloads
+> would justify a second library entry, and borrowing stays the honest
+> default until one exists.
 
 ---
 
@@ -503,7 +668,18 @@ the design document says so in the same words as the README.
 **Sources.** Kumar A, Madni ZK, Chaturvedi S, Salunke DM. 2024. Mol Immunol
 165:55-67. PDB entry 8IA6.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The neutralisation published for bacterially expressed E113
+> says something about an mRNA-expressed, mammalian-made version of the same
+> sequence.
+>
+> **If wrong.** Folding, disulfide pairing and glycosylation differ between
+> expression systems, and the transcript would produce a molecule whose
+> activity has never been measured.
+>
+> **With more information.** Binding data for mammalian-expressed E113 is
+> the first checkpoint, before any neutralisation question is even asked.
 
 ---
 
@@ -532,7 +708,18 @@ the deposited sequence by a test rather than by a copy.
 **Sources.** PDB entry 8IA6; `scripts/prepare_reference_data.py`;
 `tests/test_venom_construct.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The crystallised construct minus its vector residue and
+> hexahistidine tag is the antibody, and nothing functional lived in the
+> removed pieces.
+>
+> **If wrong.** The payload would still be pinned by the germline and
+> constant-region assertions, which is why the script refuses to run without
+> them. The trim is checked, not trusted.
+>
+> **With more information.** The paper's own supplementary sequences, if ever
+> deposited, would confirm the trimmed boundary.
 
 ---
 
@@ -561,7 +748,19 @@ of the two most commonly used in mRNA vaccine designs.
 **Sources.** UniProt P02768; Attallah C et al. 2017, Protein Expr Purif
 132:27-33; doi:10.1101/2025.11.25.690495.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The human serum albumin leader is cleaved at its predicted
+> site when fused ahead of an scFv, and secretion is the right destination
+> for an antivenom antibody.
+>
+> **If wrong.** Mis-cleavage would edit the antibody's N-terminus, and
+> non-cleavage would tether it to the membrane. The N-terminal framework is
+> usually tolerant, but CDR1 sits close by.
+>
+> **With more information.** Cleavage predictors and expression data, or an
+> equally citable alternative leader such as the immunoglobulin kappa
+> chain's.
 
 ---
 
@@ -588,7 +787,19 @@ opinion.
 
 **Sources.** `docs/m3_ecarpholin_s_construct.md`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The caveats as written, monovalency, hours of clearance,
+> one to two hours before detectable expression, match the evidence, and a
+> reader is served by meeting them in the fourth section rather than the
+> last.
+>
+> **If wrong.** Nothing in the engine breaks; the risk is rhetorical, and it
+> runs in the safe direction.
+>
+> **With more information.** Pharmacokinetic curves from clinical
+> mRNA-antibody programmes would let the caveat carry numbers instead of
+> ranges.
 
 ---
 
@@ -614,7 +825,19 @@ that same C-terminal myotoxic loop.
 **Sources.** UniProt P48650; PDB 2QHE; Zhou X et al. 2008, Biophys J
 95:3366-3380.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The UniProt sequence, the crystal structure and the
+> immunogen are the same ecarpholin S, at the subspecies level, sochurek
+> included.
+>
+> **If wrong.** The construct targets a sequence-perfect toxin that may not
+> be the protein the antibody data came from, and phospholipase A2 isoform
+> diversity within Echis carinatus is real.
+>
+> **With more information.** The immunogen lot's own composition. This is the
+> regional-variation problem, and it is the one the variant strand of M6
+> inherits.
 
 ---
 
@@ -642,7 +865,17 @@ fails if they differ from the committed copies.
 **Sources.** `src/mrna/candidates.py`, `src/mrna/tracker.py`,
 `tests/test_tracker.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The controlled vocabularies partition the literature the
+> way the biology actually divides, and what the schema does not hold is not
+> needed for the mRNA question.
+>
+> **If wrong.** A mis-filed row fails loudly and a missing column fails
+> silently, and the second is the real risk.
+>
+> **With more information.** Every time the M5 planner reached past the table
+> for a note was a schema gap worth closing.
 
 ---
 
@@ -665,7 +898,17 @@ when it is not.
 
 **Sources.** `src/mrna/tracker.py`, function `derive_mrna_suitability`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Format and sequence source together determine whether one
+> transcript can carry a payload, and nothing else blocks transcription.
+>
+> **If wrong.** The column would still be honest about what it derives,
+> because what it derives is transcript-ability, not expressibility. A
+> disulfide-heavy single chain can be ready and still fold badly.
+>
+> **With more information.** The column's claim is narrow on purpose, and its
+> name could say so more plainly.
 
 ---
 
@@ -689,7 +932,16 @@ what was searched. The report leads with that number rather than burying it.
 
 **Sources.** `data/candidates.tsv`, `docs/m4_candidate_tracker.md`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** A sequence recorded as not found is a property of the
+> search, dated and reproducible, not of the field.
+>
+> **If wrong.** The availability count moves with the query set, and eight of
+> twenty-two is a number about a date.
+>
+> **With more information.** The query set belongs in the tracker beside the
+> date, so the next searcher inherits the search and not just the number.
 
 ---
 
@@ -715,7 +967,17 @@ toxin families attached.
 Lomonte 2013, *Toxicon* 42:915-931; Escalante, Rucavado and Fox 2011,
 *J Proteomics* 74:1781-1796.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** An antibody against the Kunitz-type inhibitors would
+> protect the clotting factors the venom is attacking, which is the opposite
+> of help.
+>
+> **If wrong.** Some Kunitz-family proteins in viper venom act by other
+> mechanisms, and per-species annotation would move individual cells back to
+> opportunity. The blanket verdict fails safe, toward not designing.
+>
+> **With more information.** Per-toxin functional annotation per species.
 
 ---
 
@@ -739,7 +1001,17 @@ to a Big Four species.
 
 **Sources.** `docs/m4_candidate_tracker.md`, section "What the survey found".
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** The field's constraint for an mRNA antivenom is readable
+> sequences rather than missing antibodies, so the mRNA layer is the
+> rate-limiting contribution.
+>
+> **If wrong.** If the real constraint were expression or in vivo
+> neutralisation, this project's contribution would be ornamental.
+>
+> **With more information.** Whether the groups holding the sequences begin
+> depositing them, which is the trend the survey observed.
 
 ---
 
@@ -765,7 +1037,17 @@ number of cells it covers are two different things, and the report shows both.
 **Sources.** `PayloadGroup` in `src/mrna/cocktail.py`; the Centi-LNX-D09 rows
 in `src/mrna/candidates.py`; Glanville J, Kwong K, et al. 2025, *Cell*.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** One antibody delivered once covers every cell its rows
+> claim, and antibodies in a plan do not interfere with one another.
+>
+> **If wrong.** Antibody pairs can antagonise, and the coverage arithmetic
+> would overstate the plan's protection by exactly the interactions it
+> ignores.
+>
+> **With more information.** A compatibility matrix, from any published
+> antibody-pair neutralisation data.
 
 ---
 
@@ -790,7 +1072,17 @@ raising it will mean replacing the algorithm, not tuning it.
 **Sources.** `_minimum_cover` in `src/mrna/cocktail.py`; the independent
 reference search in `tests/test_cocktail.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Fewest payloads is the right objective, and payloads inside
+> a tier are interchangeable.
+>
+> **If wrong.** A minimal plan can trade a better-evidenced antibody for a
+> worse one at equal coverage, because the cover is unweighted within its
+> tiers.
+>
+> **With more information.** Evidence-weighted optimisation, now that the
+> tiers already gate for sequence and licence.
 
 ---
 
@@ -815,7 +1107,18 @@ site can be brought in to the standard the rest of the sequences meet.
 **Sources.** `Payload.is_single_polypeptide` in `src/mrna/payload.py`; the
 chain records in `data/reference/candidate_fab_chains.fasta`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Neutralisation data belongs to the format it was measured
+> in, so a converted Fab is a molecule nobody has published data for.
+>
+> **If wrong.** If format conversion preserved activity in practice, four
+> more payloads would become buildable, at the cost of citations that no
+> longer describe the transcript's product.
+>
+> **With more information.** Any head-to-head Fab-versus-single-chain
+> neutralisation for a venom antibody would justify a converted tier with the
+> caveat attached.
 
 ---
 
@@ -844,7 +1147,18 @@ CJ, Wang Y, et al. 2004, *Nat Biotechnol* 22:589-594; Donnelly KL, Smit AF,
 Fitch PM, et al. 2001, *J Gen Virol* 82:2033-2042; Kim JH, Lee HS, et al.
 2014, *BMC Biotechnol* 14:100.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** A sequence typed from memory is a provenance failure even
+> when the whole field can recite it, because this repository's currency is
+> checkability.
+>
+> **If wrong.** The cost is schedule, one milestone late, and never
+> correctness. The rule fails closed.
+>
+> **With more information.** A versioned registry entry or a structural
+> record containing the peptide would meet the standard, and finding one is
+> M6's first errand.
 
 ---
 
@@ -870,7 +1184,17 @@ licence paragraph and the coverage summary.
 **Sources.** `build_report` in `scripts/cocktail_design.py`; the report tests
 in `tests/test_cocktail.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** Recomputing every figure from the table catches the drift
+> that matters, and the prose around the figures is where interpretation
+> risk lives.
+>
+> **If wrong.** A generated number can still be computed from a wrong table;
+> generation guarantees consistency, not truth.
+>
+> **With more information.** Nothing further; the two hand-written errors
+> this rule caught are the argument for it.
 
 ---
 
@@ -897,7 +1221,114 @@ priority 2023-10-10, published 2025-04-17; `WO2023209212A1`, same
 institution, priority 2022-04-29, published 2023-11-02; the patent status
 column in `src/mrna/candidates.py`.
 
-**Owner's note.** _to be written by the project owner_
+**Owner's note.**
+
+> **Assumption.** What a public patent database said on a date, about named
+> applications, is a meaningful floor for an open programme.
+>
+> **If wrong.** Mentions are not claims: seventy-one mentions might sit
+> beside narrow claims, and an unmentioned clone might still fall inside a
+> broad one.
+>
+> **With more information.** That is legal work this project will not do
+> itself, and the floor is recorded as a floor for exactly that reason.
+
+---
+
+## M6: the refresh, and the single transcript
+
+### 2026-11-21, a refresh is recorded, and a verified supplement counts as located
+
+**Decision.** The candidate table is re-checked on a date, and the re-check
+lives in the table itself: `REFRESH_NOTES` records every source the refresh
+examined and what became of it. A sequence in a paper's supplementary data
+now counts as located, and the `paper:` token names the supplement precisely
+enough to open, when the supplement has been downloaded and read during the
+survey or a refresh.
+
+**Why.** The original survey's rule was that a supplementary table is not
+checkable, because probably true is the whole problem. The refresh met the
+same rule from the other side: the D2 and E2 sequences were verified present
+in an openly downloadable supplement during the search, which makes the
+claim checkable by anyone who repeats it, and the token records where. The
+negative results are recorded for the same reason: a search that is not
+written down is a search the next refresh repeats for nothing.
+
+**Consequence.** One row added: D2 and E2, de novo designed VHHs against
+alpha-cobratoxin of the monocled cobra, in vivo rescue included, sequences
+verified in the bioRxiv supplement. The single-polypeptide tier now holds
+three payloads while a minimal cover still needs two, and the M5 report's
+sentence was rewritten to state both numbers instead of conflating them. One
+citation corrected: the MKSS1 paper is by Kaur, Dubey, Khatri and Sehrawat,
+not the author list the table carried, which the refresh checked against
+PubMed. The krait phospholipase A2 gap and the Russell's viper
+metalloproteinase gap are unchanged.
+
+**Sources.** bioRxiv 2026.09.01.748349, supplementary data 1; PubMed PMID
+31689425; `REFRESH_NOTES` and `SURVEY_DATES` in `src/mrna/candidates.py`.
+
+**Owner's note.**
+
+> **Assumption.** A de novo designed VHH whose sequences and screening data
+> sit in an open supplement carries the same standing in this table as a
+> discovered antibody, provided its neutralisation claim is in vivo and its
+> species is in the clinical set.
+>
+> **If wrong.** A preprint is not a peer-reviewed paper, and a designed
+> sequence has liabilities a selected one does not; the row would lend the
+> tier's count a firmness the source does not have. The row's notes carry
+> the preprint status for exactly that reader.
+>
+> **With more information.** Peer review of the preprint, and the D2
+> construct build planned for M6, which would check the designed sequence
+> against the 9GCN framework structure it was designed on.
+
+---
+
+## M6: two payloads, one transcript
+
+### 2026-11-21, a structure that carries the element is a source for the element
+
+**Decision.** The P2A ribosome-skipping peptide is sourced from two
+deposited constructs that carry it, PDB entries 31FW and 8E99, rather than
+typed from the characterisation paper, and the test suite extracts the
+peptide from both raw files and checks the two agree with the engine's
+constant.
+
+**Why.** M5 refused the 2A route because the sequence could not be sourced
+to the standard: publishers blocked, PDFs came back empty, and the
+tempting fallback was typing a famous 19-mer from memory. What nobody had
+tried was asking where the peptide physically is. Expression constructs
+put it in crystallised, deposited molecules, and a sequence search over
+the structural database finds 51 of them. Two from different groups,
+agreeing residue for residue, meet the same two-source bar the WHO
+document and the community assembly met in M0.
+
+**Consequence.** `src/mrna/p2a.py` holds the element with its sources;
+both raw entries are committed with checksums; and the first construct
+built on it carries two payloads on one transcript, 1,722 nt, with the
+mature downstream product checked by translation against the published
+E113 sequence, residue for residue.
+
+**Sources.** PDB entries 31FW and 8E99; Kim JH, Lee SR, Li LH, et al.
+2011, PLoS ONE 6(4):e18556; `scripts/cocktail_transcript.py`.
+
+**Owner's note.**
+
+> **Assumption.** A peptide that appears in two deposited expression
+> constructs is the peptide the characterisation papers describe, and the
+> ribosome treats it the same way inside a message this repository
+> designs.
+>
+> **If wrong.** Skip efficiency is context-dependent, and the two
+> deposited constructs are cryo-EM expression tools rather than
+> therapeutic messages; a scarred nanobody or an incompletely skipped
+> transcript would produce molecules nobody has measured. The report says
+> the project cannot measure the ratio for exactly that reason.
+>
+> **With more information.** Any published 2A-linked antibody pair with
+> product-level quantification, in the venom literature or outside it,
+> would let the report carry a number instead of a caveat.
 
 ---
 
@@ -957,18 +1388,15 @@ Trop Dis 15(2):e0009150; Senji Laxme RR, Khochare S, Attarde S, et al.
 
 ## Next
 
-The open item for milestone M6 is no longer a design problem, and that is the
-finding M5 arrived at. The tracker has named the three things that would move
-the plan: a candidate against common krait phospholipase A2, where no
-published candidate exists and the toxin is about two thirds of that venom by
-mass; the metalloproteinases of Indian Russell's viper, where the one
-recombinant candidate has no publicly locatable sequence; and a conversation
-with the two institutions whose published applications cover the sequences
-that do exist.
+M7 named its own successor: the gap matrix under-models the viper venoms,
+with snake venom serine proteases at up to 27 per cent and C-type lectins
+at up to 20 per cent of the mapped populations' venom by mass, and no
+column for either. Widening the matrix is a decision that changes the
+published M4 and M5 artifacts, so it belongs to a milestone of its own.
 
-On the engineering side, M6 has one outstanding design question: whether
-several payloads can share one transcript, which needs a sourced 2A peptide or
-an internal ribosome entry site. Regional venom variants and a design
-iteration against the payload that already exists are the other two strands.
-
-
+The other strands are the ones the tracker has carried since M4: a
+candidate against common krait phospholipase A2, where none exists; the
+sequence of MKSS1, which no public database holds; and the conversation
+with the two institutions whose published applications cover the
+sequences that do exist. A three-payload transcript with D2 is one
+optimiser run away, waiting for a reason.

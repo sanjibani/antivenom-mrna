@@ -22,7 +22,9 @@ from mrna.candidates import (
     MRNA_SUITABILITY,
     PATENT_STATUS,
     POLYCLONAL_FORMATS,
+    REFRESH_NOTES,
     SPECIES_TOXIN_FAMILIES,
+    SURVEY_DATES,
     TOXIN_FAMILIES,
     TOXIN_FAMILY_NOTES,
     Candidate,
@@ -282,3 +284,26 @@ def test_the_artifacts_contain_no_em_dash() -> None:
     tracker = CandidateTracker()
     for text in (tracker.to_tsv(), tracker.render_markdown()):
         assert "\u2014" not in text
+
+
+def test_the_report_records_what_each_refresh_checked() -> None:
+    """A refresh whose negative results are unrecorded is a search repeated."""
+    report = CandidateTracker().render_markdown()
+    for date, source, _outcome in REFRESH_NOTES:
+        assert date in SURVEY_DATES
+        assert source in report
+
+
+def test_a_verified_paper_supplement_counts_as_a_located_sequence() -> None:
+    """The paper kind names a supplement that was downloaded and read.
+
+    The 2026-11-21 refresh added D2 and E2 from a preprint whose supplement
+    holds the amino-acid sequences of all 48 designs. The row must therefore
+    derive as ready: a public sequence and a one-polypeptide format.
+    """
+    from mrna.tracker import derive_mrna_suitability
+
+    row = next(c for c in CANDIDATES if c.antibody_id == "D2, E2")
+    assert row.molecule_format == "VHH"
+    assert derive_mrna_suitability(row.molecule_format, row.sequence_source) == "ready"
+    assert row.mrna_suitability == "ready"

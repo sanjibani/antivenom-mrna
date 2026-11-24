@@ -1,0 +1,10 @@
+element	start	end	length	description
+cap	1	2	2	A modified 5'-cap1 structure (m7G+m3'-5'-ppp-5'-Am). The two nucleotides printed for the cap are the 7-methylguanosine at position 1 and the first backbone nucleotide at position 2, joined by a 5'-to-5' triphosphate.
+5'-UTR	3	54	52	5'-untranslated region derived from human alpha-globin RNA with an optimized Kozak sequence. As used in BNT162b2.
+signal peptide	55	108	54	Human serum albumin signal peptide, which directs the nascent polypeptide into the endoplasmic reticulum for secretion.
+TPL1158_01_C09 VHH	109	477	369	Codon-optimised camelid VHH TPL1158_01_C09 against alpha-cobratoxin, carrying the GSG-P2A scar at its C-terminus: 21 residues the published binding data does not describe
+P2A	478	540	63	The porcine teschovirus-1 2A ribosome-skipping peptide, preceded by the glycine-serine-glycine spacer both deposited constructs use
+signal peptide 2	541	597	57	The proline the ribosome carries over from the skip, followed by a second human serum albumin signal peptide. Signal peptidase removes both together, so the mature downstream product starts exactly at the published E113 sequence
+E113 scFv	598	1317	720	Codon-optimised human scFv E113 against Echis carinatus phospholipase A2, reproduced residue for residue from the published molecule, followed by a stop codon
+3'-UTR	1318	1612	295	A 3' untranslated region comprising two sequence elements derived from the amino-terminal enhancer of split (AES) mRNA and the mitochondrial encoded 12S ribosomal RNA, to confer RNA stability and high total protein expression. As used in BNT162b2.
+poly(A)	1613	1722	110	A 110-nucleotide poly(A)-tail consisting of a stretch of 30 adenosine residues, followed by a 10-nucleotide linker sequence and another 70 adenosine residues.

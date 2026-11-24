@@ -53,6 +53,7 @@ __all__ = [
     "PayloadGroup",
     "Tier",
     "excluded_cells",
+    "payload_groups_at",
     "plan_all_tiers",
     "plan_cocktail",
     "target_cells",
@@ -280,6 +281,35 @@ def _group_candidates(candidates: list[Candidate]) -> list[PayloadGroup]:
             PayloadGroup(antibody_id=antibody_id, cells=cells, rows=tuple(rows)),
         )
     return groups
+
+
+def payload_groups_at(tracker: CandidateTracker, tier_name: str) -> tuple[PayloadGroup, ...]:
+    """Every payload group that passes a tier, not only the minimal cover.
+
+    A plan reports the minimal cover, and a tier usually holds more payloads
+    than the cover needs, because payloads that cover the same cell stand in
+    for one another. A report that quoted the cover size as the tier size
+    would call those redundant payloads something they are not.
+
+    Args:
+        tracker: The validated candidate table.
+        tier_name: The name of the tier, one of :data:`TIERS`.
+
+    Returns:
+        The payload groups, in the order the antibodies first appear.
+
+    Raises:
+        ValueError: If the tier name is not known.
+    """
+    matches = [candidate for candidate in TIERS if candidate.name == tier_name]
+    if not matches:
+        known = ", ".join(candidate.name for candidate in TIERS)
+        msg = f"unknown cocktail tier {tier_name!r}; known tiers: {known}"
+        raise ValueError(msg)
+    allowed = [
+        candidate for candidate in tracker.candidates if matches[0].allows(candidate)
+    ]
+    return tuple(_group_candidates(allowed))
 
 
 def _minimum_cover(
