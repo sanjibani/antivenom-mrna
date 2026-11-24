@@ -86,7 +86,7 @@ validation signal, so that there are no silent stretches.
 | M3 | One toxin, one published neutralising antibody, one full construct, one design document | Done, see [the M3 report](docs/m3_ecarpholin_s_construct.md) |
 | M4 | Literature map: Big Four toxins to antibodies to sequences to patents | Done, see [the M4 report](docs/m4_candidate_tracker.md) |
 | M5 | The Big Four cocktail, planned from the literature map and built where it can be | Done, see [the M5 report](docs/m5_big_four_cocktail.md) |
-| M6+ | Regional variants, design iteration, literature refresh | Not started |
+| M6+ | Literature refresh, single transcript, regional variants, design iteration | In progress: the refresh has landed |
 
 ## What M5 established
 
@@ -118,13 +118,15 @@ attrition down those tiers is the result.
   is about 64.5 per cent phospholipase A2 by mass, so the most under-covered
   species of the Big Four is the one where a single good antibody would buy
   the most.
-- **Two constructs can be built from public material.** E113, the scFv already
+- **M5 built two constructs from public material.** E113, the scFv already
   published in M3, reproduced byte for byte by the M5 pipeline, and
   TPL1158_01_C09, a 123-residue camelid VHH against alpha-cobratoxin from
-  PDB 9GCN. The other four payloads are Fabs or two-chain antibodies:
-  converting them into one transcript means inventing a single-chain format
-  that the published neutralisation data does not describe, so the data would
-  no longer belong to the molecule being transcribed.
+  PDB 9GCN. The 2026-11-21 refresh later added a third transcribable
+  payload, D2, which the minimal cover does not need. The other payloads
+  are Fabs or two-chain antibodies: converting them into one transcript
+  means inventing a single-chain format that the published neutralisation
+  data does not describe, so the data would no longer belong to the
+  molecule being transcribed.
 - **The licence is the real blocker, and it is stated as a fact.** A public
   patent search finds an application covering TPL1158_01_C09: it is named 71
   times in WO2025078529A1, published by Danmarks Tekniske Universitet. For
@@ -145,7 +147,7 @@ every number is computed from the M4 table rather than written by hand.
 The literature map, and the surprising part of it.
 
 M4 records every published antibody candidate with a claimed neutralising
-activity against a toxin, or the whole venom, of a Big Four species: 22
+activity against a toxin, or the whole venom, of a Big Four species: 23
 candidates, with the species, toxin family, target, antibody, format, sequence
 source, patent status, what each was tested against, its evidence level and
 its mRNA suitability. The table is generated from
@@ -154,11 +156,19 @@ its mRNA suitability. The table is generated from
 the code that validates it.
 
 - **Sequence availability, not antibody discovery, is the bottleneck.** Only
-  8 of the 22 candidates have a variable-region sequence that can be located
+  9 of the 23 candidates have a variable-region sequence that can be located
   in a public database. The rest are in a paper's supplementary table, in a
   patent, or nowhere a machine can read. For a project whose contribution is
   the mRNA layer, that is the number that matters, and it is much easier to
   move than discovering an antibody.
+- **The 2026-11-21 refresh added one candidate and corrected one citation.**
+  The candidate is D2, a de novo designed VHH against alpha-cobratoxin of
+  the monocled cobra with in vivo rescue data, its sequence verified present
+  in an openly downloadable preprint supplement. The correction is the MKSS1
+  citation, which carried the wrong author list against PubMed. The krait
+  phospholipase A2 gap and the Russell's viper metalloproteinase gap are
+  unchanged, and every exclusion the refresh made is recorded with its
+  reason in the M4 report.
 - **Common krait is almost entirely unprotected.** Krait venom is about
   64.5 per cent phospholipase A2 by mass, and no published antibody
   candidate in the survey targets krait phospholipase A2. The one krait

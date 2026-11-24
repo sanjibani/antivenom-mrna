@@ -1235,6 +1235,56 @@ column in `src/mrna/candidates.py`.
 
 ---
 
+## M6: the refresh, and the single transcript
+
+### 2026-11-21, a refresh is recorded, and a verified supplement counts as located
+
+**Decision.** The candidate table is re-checked on a date, and the re-check
+lives in the table itself: `REFRESH_NOTES` records every source the refresh
+examined and what became of it. A sequence in a paper's supplementary data
+now counts as located, and the `paper:` token names the supplement precisely
+enough to open, when the supplement has been downloaded and read during the
+survey or a refresh.
+
+**Why.** The original survey's rule was that a supplementary table is not
+checkable, because probably true is the whole problem. The refresh met the
+same rule from the other side: the D2 and E2 sequences were verified present
+in an openly downloadable supplement during the search, which makes the
+claim checkable by anyone who repeats it, and the token records where. The
+negative results are recorded for the same reason: a search that is not
+written down is a search the next refresh repeats for nothing.
+
+**Consequence.** One row added: D2 and E2, de novo designed VHHs against
+alpha-cobratoxin of the monocled cobra, in vivo rescue included, sequences
+verified in the bioRxiv supplement. The single-polypeptide tier now holds
+three payloads while a minimal cover still needs two, and the M5 report's
+sentence was rewritten to state both numbers instead of conflating them. One
+citation corrected: the MKSS1 paper is by Kaur, Dubey, Khatri and Sehrawat,
+not the author list the table carried, which the refresh checked against
+PubMed. The krait phospholipase A2 gap and the Russell's viper
+metalloproteinase gap are unchanged.
+
+**Sources.** bioRxiv 2026.09.01.748349, supplementary data 1; PubMed PMID
+31689425; `REFRESH_NOTES` and `SURVEY_DATES` in `src/mrna/candidates.py`.
+
+**Owner's note.**
+
+> **Assumption.** A de novo designed VHH whose sequences and screening data
+> sit in an open supplement carries the same standing in this table as a
+> discovered antibody, provided its neutralisation claim is in vivo and its
+> species is in the clinical set.
+>
+> **If wrong.** A preprint is not a peer-reviewed paper, and a designed
+> sequence has liabilities a selected one does not; the row would lend the
+> tier's count a firmness the source does not have. The row's notes carry
+> the preprint status for exactly that reader.
+>
+> **With more information.** Peer review of the preprint, and the D2
+> construct build planned for M6, which would check the designed sequence
+> against the 9GCN framework structure it was designed on.
+
+---
+
 ## Next
 
 The open item for milestone M6 is no longer a design problem, and that is the

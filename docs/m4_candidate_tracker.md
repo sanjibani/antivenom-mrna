@@ -8,15 +8,26 @@ Two things are deliberately kept apart here. The first is whether a candidate wo
 
 ## What the survey found
 
-- Only 8 of 22 candidates have a variable-region sequence that can be located in a public database. Sequence availability, not antibody discovery, is the bottleneck for an mRNA programme.
+- Only 9 of 23 candidates have a variable-region sequence that can be located in a public database. Sequence availability, not antibody discovery, is the bottleneck for an mRNA programme.
 - Common krait venom is about 64.5 per cent phospholipase A2 by mass, and no published antibody candidate in this survey targets krait phospholipase A2. 0 candidates cover krait phospholipase A2.
 - No published antibody candidate targets the snake venom metalloproteinases of Indian Russell's viper, which are the main cause of the haemorrhage in that bite. 0 candidates cover that toxin family.
 - 7 of the uncovered cells belong to a Big Four species, and every one of them is a cell with no candidate at all rather than a cell with weak candidates.
 - The one construct this repository has built, for E113, is one of the candidates whose sequence is publicly available.
 
+## The refresh record, 2026-11-21
+
+The table was built on 2026-11-01 and re-checked on 2026-11-21. Each item below is a source the refresh examined, and what became of it. A negative result is written down so the next refresh inherits the search rather than repeating it.
+
+- **Overath et al. 2026, bioRxiv 2026.09.01.748349** (2026-11-21): added: two de novo designed VHHs, D2 and E2, with in vivo rescue of mice against alpha-cobratoxin of Naja kaouthia. The sequences were verified present in the openly downloadable supplementary data during the refresh, which is why the row counts as public.
+- **Damsbo et al. 2025, mAbs, PMC12218449** (2026-11-21): excluded: broadly neutralising VHHs against short-chain alpha-neurotoxins, in vivo protection included, but the tested panel holds no Big Four species and no Naja kaouthia short-chain toxin.
+- **Carroll et al. 2026, PNAS 2612168123** (2026-11-21): excluded: combinations of conserved rattlesnake serum proteins that block viper venom lethality. Not antibodies, and no Big Four species.
+- **Jia et al. 2026, Toxicon, S0041010126001108** (2026-11-21): excluded: a humanized synthetic nanobody library platform. No specific Big Four candidate in the accessible record.
+- **Kinha 2023, doctoral thesis, DSpace 123456789/2201** (2026-11-21): identified, not added: a genetically linked bispecific nanobody claimed to neutralise Russell's viper venom, but the repository holds a one-page placeholder in place of the full text, so no claim in it can be verified.
+- **MKSS1, Kaur et al. 2019** (2026-11-21): still no public sequence located. The refresh also found the citation carrying the wrong author list, corrected against PubMed PMID 31689425.
+
 ## The table
 
-22 candidates, covering 8 species names and 6 toxin families.
+23 candidates, covering 8 species names and 6 toxin families.
 
 | Species | Toxin family | Target | Antibody | Format | Sequence source | Patent | Tested against | Evidence | mRNA |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -28,6 +39,7 @@ Two things are deliberately kept apart here. The first is whether a candidate wo
 | Naja kaouthia | 3FTx-L | alpha-cobratoxin | 368_01_C05 | scFv | patent:WO2023209212A1 | application-pending | in vitro neutralisation of alpha-cobratoxin | L2 | unknown |
 | Naja kaouthia | 3FTx-L | alpha-cobratoxin | TPL1158_01_C09 | VHH | PDB:9GCN; patent:WO2025078529A1 | application-pending | in vitro binding, by co-crystal structure | L2 | ready |
 | Naja kaouthia | 3FTx-L | alpha-cobratoxin | A01 | mAb-IgG | PDB:9HUO; PDB:9FYT; PDB:9HXO; patent:WO2023209212A1 | application-pending | in vitro receptor-blocking at pH 4.5, 5.5 and 6.0 | L2 | adaptable |
+| Naja kaouthia | 3FTx-L | alpha-cobratoxin | D2, E2 | VHH | paper:bioRxiv 2026.09.01.748349 supplementary data 1 | not-assessed | in vitro binding by Octet and in vivo rescue of mice challenged with alpha-cobratoxin and with Naja kaouthia whole venom | L4 | ready |
 | Naja kaouthia | 3FTx-L | alpha-cobratoxin | C2, C21 | VHH | none | not-assessed | in vitro and in vivo neutralisation of alpha-cobratoxin in mice | L4 | unknown |
 | Naja kaouthia | 3FTx-L | alpha-neurotoxin | TPL0629_01_D11 | VHH | none | not-assessed | in vitro neutralisation and in vivo protection | L4 | unknown |
 | Naja kaouthia | PLA2 | phospholipase A2 | TPL0637_01_A07 | VHH | none | not-assessed | in vitro neutralisation and in vivo protection | L4 | unknown |
@@ -64,7 +76,7 @@ A cell is covered when at least one candidate names that species and that toxin 
 | Daboia russelii formosensis | none | none | none | none | DRFS3, DRFS6, DRFS9, DRFS13, DRFL1 (1) | none |
 | **Echis carinatus** | none | none | none | none | E113, E10 (2) | H11 (1) |
 | Echis carinatus sochureki | none | none | none | none | none | none |
-| Naja kaouthia | 2554_01_D11, 368_01_C05, TPL1158_01_C09, A01, C2, C21, TPL0629_01_D11 (6) | none | none | none | TPL0637_01_A07 (1) | none |
+| Naja kaouthia | 2554_01_D11, 368_01_C05, TPL1158_01_C09, A01, D2, E2, C2, C21, TPL0629_01_D11 (7) | none | none | none | TPL0637_01_A07 (1) | none |
 | **Naja naja** | Centi-LNX-D09 (1) | Centi-SNX-B03 (1) | none | none | N194 (1) | none |
 
 The uncovered cells, one by one. The Big Four cells are the ones this project is about; the others are context.
@@ -117,12 +129,12 @@ The second is that the Kunitz-type serine protease inhibitor cells are empty for
 
 | mRNA suitability | Candidates | Meaning |
 | --- | --- | --- |
-| ready | 2 | a defined sequence is public and the format is a single open reading frame |
+| ready | 3 | a defined sequence is public and the format is a single open reading frame |
 | adaptable | 6 | a defined sequence is public, but the format needs more than one ORF or an engineering step |
 | unknown | 12 | the sequence was not located, so nothing can be said about buildability |
 | blocked | 2 | no defined sequence exists to transcribe, because the candidate is polyclonal |
 
-8 of 22 candidates have a sequence that can be located in a public database: Centi-LNX-D09, Centi-SNX-B03, TPL1158_01_C09, A01, 95Mat5, Centi-LNX-D09, E113, H11.
+9 of 23 candidates have a sequence that can be located in a public database: Centi-LNX-D09, Centi-SNX-B03, TPL1158_01_C09, A01, D2, E2, 95Mat5, Centi-LNX-D09, E113, H11.
 
 The rest are not missing because they are bad. They are missing because the sequence is in a paper's supplementary table, in a patent, or nowhere that a machine can read. That is a solvable problem, and it is a much smaller problem than discovering an antibody.
 
@@ -139,7 +151,7 @@ The rest are not missing because they are bad. They are missing because the sequ
 
 ## What the table does not claim
 
-- **It is a survey, not an exhaustive census.** A row saying `none` for a sequence means the sequence was not located during the survey on 2026-11-01, not that no sequence exists.
+- **It is a survey, not an exhaustive census.** A row saying `none` for a sequence means the sequence was not located as of the latest refresh on 2026-11-21, not that no sequence exists.
 - **Patent status is a fact about filings, not a clearance.** A row marked `application-pending` records that an application is public. It is not an opinion about freedom to operate, and it is not a freedom-to-operate opinion.
 - **Evidence levels are the highest rung reached, not the quality of the result.** A candidate at L4 has protection data in an animal model. It does not follow that the protection was complete, or that the model resembles a human bite.
 - **No candidate here has been evaluated by this project.** This is a map of what has been published. The one construct this repository has built, for E113, is built from a published sequence and carries the published data with it.
@@ -169,13 +181,14 @@ The suitability verdict is not a hand annotation. The engine recomputes it from 
 - `Glanville2025`: Glanville J, Kwong K, et al. 2025. Broad-spectrum neutralisation of elapid venoms by a minimal antibody combination plus a small-molecule inhibitor. Cell. Centivax anti-venom antibodies, US20240294618A1 and EP4319816A4.
 - `IMPACT1708`: Investigational candidates for snakebite envenoming, IMPACT Global Health, PCR ID 1708. Camelid monospecific IgG against Echis sochureki venom.
 - `IMPACT1864`: Investigational candidates for snakebite envenoming, IMPACT Global Health, PCR ID 1864. Human recombinant polyclonal Fab against Echis carinatus.
+- `Kaur2019`: Kaur M, Dubey A, Khatri M, Sehrawat S. 2019. Secretory PLA2 specific single domain antibody neutralizes Russell viper venom induced cellular and organismal toxicity. Toxicon 172:15-18. PMID 31689425.
 - `Khalek2024`: Khalek A, et al. Synthetic development of a broadly neutralizing antibody against snake venom long-chain alpha-neurotoxins. Sci Transl Med. PDB 8SXP.
 - `Kumar2024`: Kumar A, Madni ZK, Chaturvedi S, Salunke DM. 2024. Recombinant human scFv antibody fragments against phospholipase A2 from Naja naja and Echis carinatus snake venoms: In vivo neutralization and mechanistic insights. Mol Immunol 165:55-67. doi:10.1016/j.molimm.2023.12.006. PMID 38154407.
 - `Laustsen2024`: Laustsen AH, et al. 2024. Engineering of a nanobody-based recombinant antivenom. Nat Commun. doi:10.1038/s41467-024-48539-z.
 - `Ledsgaard2022`: Ledsgaard L, Laustsen AH, Pus U, et al. 2022. In vitro discovery of a human monoclonal antibody that neutralizes lethality of cobra snake venom. MAbs 14:2085536. doi:10.1080/19420862.2022.2085536.
 - `Ledsgaard2023`: Ledsgaard L, Wade J, Jenkins TP, et al. 2023. Discovery and optimization of a broadly-neutralizing human monoclonal antibody against long-chain alpha-neurotoxins from snakes. Nat Commun 14:682. doi:10.1038/s41467-023-36393-4.
 - `Lee2017`: Lee CH, Lee YC, Lee YL, et al. 2017. Single chain antibody fragment against venom from the snake Daboia russelii formosensis. Toxins 9:347. doi:10.3390/toxins9110347.
-- `Li2019`: Li W, et al. 2019. Secretory PLA2 specific single domain antibody neutralizes Russell viper venom induced cellular and organismal toxicity. Toxicon. PMID 31689425.
+- `Overath2026`: Overath MD, Lundquist EVS, Bjornsson KH, et al. 2026. De novo designed single-domain antibodies against cobra venom neurotoxicity. bioRxiv 2026.09.01.748349. Posted 2026-09-01; a preprint, not peer reviewed. VHH sequences in the openly downloadable supplementary data 1.
 - `RCSB9CLP`: RCSB Protein Data Bank entry 9CLP. Structure of ecarin from the venom of Kenyan saw-scaled viper in complex with the Fab of neutralizing antibody H11. Released 2024-09-11.
 - `RCSB9GCN`: RCSB Protein Data Bank entry 9GCN. Co-crystal VHH (TPL1158_01_C09) with alpha-cobratoxin from Naja kaouthia. Released 2025-08-06.
 - `RCSB9HUO`: RCSB Protein Data Bank entries 9HUO, 9FYT and 9HXO. A01 monoclonal antibody bound to alpha-cobratoxin at pH 5.5, 4.5 and 6.0.
