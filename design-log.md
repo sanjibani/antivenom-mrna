@@ -37,6 +37,15 @@ with the `Why` section. If the owner's reasoning disagrees with the
 implementation, that disagreement is the most valuable sentence in this log,
 and it belongs in the log before it belongs in a commit.
 
+The notes were re-checked on 2026-11-25, entry by entry, against the
+measured values each entry records. Three inaccuracies were found and
+corrected: the calibration note placed the M3 construct nearer Comirnaty
+than the measured GC values support, the stop-codon note said "initiation"
+where the mechanism is near-cognate tRNA decoding, and the signal-peptide
+note overstated how close CDR1 sits to a mis-cleavage. A review by the
+drafter is not a review by the owner, and the notes above all still wait
+for one.
+
 ---
 
 ## M0: reading a licensed vaccine backwards
@@ -236,8 +245,9 @@ report in `docs/m0_vax_anatomy.md`.
 >
 > **If wrong.** An antibody coding sequence has different compositional
 > constraints, and the band could be unreachable or simply wrong for it. The
-> M3 construct landing near Comirnaty's measured values is one data point in
-> favour, not proof.
+> M3 construct landing inside the band both licensed products span, nearer
+> the GC-richer of the two than Comirnaty, is one data point in favour, not
+> proof.
 >
 > **With more information.** Every new licensed mRNA product widens the
 > calibration set, and the band should move when they do.
@@ -265,9 +275,10 @@ nucleotide 55 is reproduced exactly.
 > **Assumption.** Translation terminates at the first in-frame stop codon,
 > and readthrough past it is negligible.
 >
-> **If wrong.** Near-cognate initiation past a stop happens at the level of
-> parts per thousand; Comirnaty's second stop codon reads as a buffer against
-> exactly that, which supports the convention rather than contradicting it.
+> **If wrong.** Readthrough, by near-cognate tRNA decoding at a stop codon,
+> happens at the level of parts per thousand; Comirnaty's second stop codon
+> reads as a buffer against exactly that, which supports the convention
+> rather than contradicting it.
 >
 > **With more information.** Designs carrying a single stop codon would
 > choose a stop context that minimises readthrough.
@@ -755,8 +766,9 @@ of the two most commonly used in mRNA vaccine designs.
 > for an antivenom antibody.
 >
 > **If wrong.** Mis-cleavage would edit the antibody's N-terminus, and
-> non-cleavage would tether it to the membrane. The N-terminal framework is
-> usually tolerant, but CDR1 sits close by.
+> non-cleavage would tether it to the membrane. A one-residue shift lands in
+> the N-terminal framework, which is usually tolerant; a larger shift is
+> uncharacterised, and CDR1 begins some thirty residues downstream.
 >
 > **With more information.** Cleavage predictors and expression data, or an
 > equally citable alternative leader such as the immunoglobulin kappa
